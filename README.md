@@ -1,0 +1,72 @@
+# aviVmw
+
+## Goals
+Spin up a full VMware/Avi environment (through Terraform and Ansible) with V-center integration without NSX-T integration
+
+## Prerequisites:
+1. Make sure terraform in installed in the orchestrator VM
+2. Make sure VMware credential/details are configured as environment variable:
+```
+TF_VAR_vsphere_user=******
+TF_VAR_vsphere_server=******
+TF_VAR_vsphere_password=******
+
+```
+
+## Environment:
+
+Terraform Plan and Ansible Playbook(s) has/have been tested against:
+
+### terraform
+
+```
+avi@ansible:~$ terraform -v
+nic@jump:~/aviVmw$ terraform -v
+Terraform v0.12.29
++ provider.null v2.1.2
++ provider.template v2.1.2
++ provider.vsphere v1.15.0
+nic@jump:~/aviVmw$
+```
+
+### Avi version
+
+```
+Avi 20.1.1 with one controller node
+Avi 20.1.1 with three controller nodes cluster
+```
+
+### V-center version:
+
+
+## Input/Parameters:
+
+1. All the paramaters/variables are stored in variables.tf
+
+## Use the the terraform script to:
+1. Create a new folder
+2. Spin up n Avi Controller
+3. Spin up n backend servers
+3. Create an ansible hosts file
+4. Spin up a jump server with ansible intalled - userdata to install package
+5. All the following tasks are done through Ansible via the jump VM:
+- Bootsrap the controller (with cluster config with Virtual IP - if 3 Avi controller deployed)
+- Create accounts with auto-generated password for automation accounts
+- Configure Avi Controller System config.
+- Configure VMware Cloud with update of the Management network
+- Configure DNS/IPAM based on Avi
+- Configure SE group
+- Configure health monitor, pool, vsvip, virtualservice
+
+## Run the terraform:
+```
+terraform apply -auto-approve
+# the terraform will output the command to destroy the environment.
+```
+
+## Improvement:
+
+### future devlopment:
+
+- autoscaling
+- GSLB

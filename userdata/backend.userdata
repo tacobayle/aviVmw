@@ -1,0 +1,33 @@
+#cloud-config
+users:
+  - default
+  - name: aviadmin
+    lock_passwd: true
+    shell: /bin/bash
+    sudo:  ALL=(ALL) NOPASSWD:ALL
+    chpasswd: {expire: False}
+    ssh_authorized_keys:
+      - ${pubkey}
+
+chpasswd:
+  list: |
+    ubuntu: $password
+    aviadmin: $password
+  expire: False
+
+packages:
+  - language-pack-en
+
+write_files:
+  - content: |
+      #!/bin/bash
+      while true ; do echo -e "HTTP/1.1 200 OK\n\nHello World - cloud is VMware - Node is $(hostname)" | sudo nc -N -l -p 80 ; done
+    path: /opt/bootstrap.sh
+    permissions: 0755
+
+  - content: |
+      ubuntu ALL=(ALL) NOPASSWD:ALL
+    path: /etc/sudoers.d/ubuntu
+
+runcmd:
+  - /opt/bootstrap.sh
