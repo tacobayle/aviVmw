@@ -34,9 +34,8 @@ write_files:
       echo $'            nameservers:\n                addresses: [${dnsMain}, ${dnsSec}]\n    version: 2' | sudo tee -a ${netplanFile}
       sudo netplan apply
       sudo apt update
-      sudo apt install -y apache2
+      sudo apt-get install -y apache2-utils
       echo "cloud init done" | tee /tmp/cloudInitDone.log
-      #while true ; do echo -e "HTTP/1.1 200 OK\n\nHello World - cloud is VMware - Node is $(hostname)" | sudo nc -N -l -p 80 ; done
     path: /opt/bootstrap.sh
     permissions: 0755
 

@@ -46,10 +46,11 @@ Avi 20.1.1 with three controller nodes cluster
 ## Use the the terraform script to:
 1. Create a new folder
 2. Spin up n Avi Controller
-3. Spin up n backend servers
-3. Create an ansible hosts file
-4. Spin up a jump server with ansible intalled - userdata to install package
-5. All the following tasks are done through Ansible via the jump VM:
+3. Spin up n backend VM(s) - (count based on the length of var.backendIpsMgt)
+4. Spin up n client server(s) - (count based on the length of var.clientIpsMgt)
+5. Create an ansible hosts file including a group for avi controller(s), a group for backend server(s)
+6. Spin up a jump server with ansible intalled - userdata to install package
+7. All the following tasks are done through Ansible via the jump VM:
 - Bootsrap the controller (with cluster config with Virtual IP - if 3 Avi controller deployed)
 - Create accounts with auto-generated password for automation accounts
 - Configure Avi Controller System config.

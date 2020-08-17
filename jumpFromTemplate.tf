@@ -1,3 +1,106 @@
+# Ansible host file creation
+
+resource "null_resource" "foo1" {
+
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF > ${var.ansibleHostFile}
+---
+all:
+  children:
+    controller:
+      hosts:
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo2" {
+  count = var.controller["count"]
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+        ${vsphere_virtual_machine.controller[count.index].default_ip_address}:
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo3" {
+  depends_on = [null_resource.foo2]
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+      vars:
+        ansible_user: admin
+        ansible_ssh_private_key_file: '~/.ssh/${basename(var.jump["private_key_path"])}'
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo4" {
+  depends_on = [null_resource.foo3]
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+    backend:
+      hosts:
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo5" {
+  depends_on = [null_resource.foo4]
+  count = length(var.backendIpsMgt)
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+        ${split("/", element(var.backendIpsMgt, count.index))[0]}:
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo6" {
+  depends_on = [null_resource.foo5]
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+      vars:
+        ansible_user: admin
+        ansible_ssh_private_key_file: '~/.ssh/${basename(var.jump["private_key_path"])}'
+EOF
+EOD
+  }
+}
+
+# Ansible host file creation (finishing)
+
+resource "null_resource" "foo7" {
+  depends_on = [null_resource.foo6]
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+EOF
+EOD
+  }
+}
+
+
 data "template_file" "jumpbox_userdata" {
   template = file("${path.module}/userdata/jump.userdata")
   vars = {
@@ -14,6 +117,7 @@ data "vsphere_virtual_machine" "jump" {
 #
 resource "vsphere_virtual_machine" "jump" {
   name             = var.jump["name"]
+  depends_on = [null_resource.foo6]
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   folder           = vsphere_folder.folder.path
@@ -181,6 +285,5 @@ EOF
       "ansible-playbook -i ~/ansible/hosts ~/ansible/main.yml",
     ]
   }
-
 
 }

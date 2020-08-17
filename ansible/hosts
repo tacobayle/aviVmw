@@ -3,7 +3,15 @@ all:
   children:
     controller:
       hosts:
-        10.206.114.251:
+        10.206.115.129:
+      vars:
+        ansible_user: admin
+        ansible_ssh_private_key_file: '~/.ssh/cloudKey'
+    backend:
+      hosts:
+        10.206.112.123:
+        10.206.112.121:
+        10.206.112.120:
       vars:
         ansible_user: admin
         ansible_ssh_private_key_file: '~/.ssh/cloudKey'

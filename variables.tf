@@ -40,6 +40,7 @@ variable "controller" {
     version = "20.1.1-9071"
     floatingIp = "10.206.112.58"
     wait_for_guest_net_timeout = 2
+    private_key_path = "~/.ssh/cloudKey"
   }
 }
 #
@@ -70,14 +71,41 @@ variable "backend" {
     memory = 4096
     disk = 20
     password = "Avi_2020"
-    public_key_path = "~/.ssh/cloudKey.pub"
-    private_key_path = "~/.ssh/cloudKey"
     network = "vxw-dvs-34-virtualwire-116-sid-6120115-wdc-06-vc12-avi-dev112"
-    count = 3
-    #wait_for_guest_net_timeout = 3
     wait_for_guest_net_routable = "false"
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
+    defaultGwMgt = "10.206.112.1"
+    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+    dnsMain = "10.206.8.130"
+    dnsSec = "10.206.8.131"
   }
+}
+#
+variable "client" {
+  type = map
+  default = {
+    cpu = 2
+    memory = 4096
+    disk = 20
+    password = "Avi_2020"
+    network = "vxw-dvs-34-virtualwire-120-sid-6120119-wdc-06-vc12-avi-dev116"
+    wait_for_guest_net_routable = "false"
+    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+    defaultGwMgt = "10.206.112.1"
+    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+    dnsMain = "10.206.8.130"
+    dnsSec = "10.206.8.131"
+  }
+}
+#
+variable "backendIpsMgt" {
+  type = list
+  default = ["10.206.112.120/22", "10.206.112.121/22", "10.206.112.123/22"]
+}
+#
+variable "clientIpsMgt" {
+  type = list
+  default = ["10.206.112.124/22"]
 }
 #
 ### Ansible variables

@@ -1,8 +1,17 @@
+
+
+
 data "template_file" "backend_userdata" {
+  count = length(var.backendIpsMgt)
   template = file("${path.module}/userdata/backend.userdata")
   vars = {
     password     = var.backend["password"]
-    pubkey       = file(var.backend["public_key_path"])
+    defaultGwMgt = var.backend["defaultGwMgt"]
+    pubkey       = file(var.jump["public_key_path"])
+    ip_mgmt      = element(var.backendIpsMgt, count.index)
+    netplanFile  = var.backend["netplanFile"]
+    dnsMain      = var.backend["dnsMain"]
+    dnsSec       = var.backend["dnsSec"]
   }
 }
 #
@@ -12,7 +21,7 @@ data "vsphere_virtual_machine" "backend" {
 }
 #
 resource "vsphere_virtual_machine" "backend" {
-  count            = var.backend["count"]
+  count            = length(var.backendIpsMgt)
   name             = "backend-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
@@ -20,6 +29,10 @@ resource "vsphere_virtual_machine" "backend" {
 
   network_interface {
                       network_id = data.vsphere_network.networkBackend.id
+  }
+
+  network_interface {
+                      network_id = data.vsphere_network.networkMgt.id
   }
 
   num_cpus = var.backend["cpu"]
@@ -60,22 +73,22 @@ resource "vsphere_virtual_machine" "backend" {
     properties = {
      hostname    = "backend-${count.index}"
      password    = var.backend["password"]
-     public-keys = file(var.backend["public_key_path"])
-     user-data   = base64encode(data.template_file.backend_userdata.rendered)
+     public-keys = file(var.jump["public_key_path"])
+     user-data   = base64encode(data.template_file.backend_userdata[count.index].rendered)
    }
  }
 
-  #connection {
-  # host        = self.default_ip_address
-  # type        = "ssh"
-  # agent       = false
-  # user        = "ubuntu"
-  # private_key = file(var.backend["private_key_path"])
-  #}
+  connection {
+    host        = split("/", element(var.backendIpsMgt, count.index))[0]
+    type        = "ssh"
+    agent       = false
+    user        = "ubuntu"
+    private_key = file(var.jump["private_key_path"])
+    }
 
-  #provisioner "remote-exec" {
-  # inline      = [
-  #   "while [ ! -f /tmp/cloudInitDone.log ]; do sleep 1; done"
-  # ]
-  #}
+  provisioner "remote-exec" {
+    inline      = [
+      "while [ ! -f /tmp/cloudInitDone.log ]; do sleep 1; done"
+    ]
+  }
 }

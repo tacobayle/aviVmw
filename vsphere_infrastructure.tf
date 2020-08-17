@@ -38,6 +38,11 @@ data "vsphere_network" "networkBackend" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 #
+data "vsphere_network" "networkClient" {
+  name = var.client["network"]
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+#
 resource "vsphere_folder" "folder" {
   path          = var.folder
   type          = "vm"
