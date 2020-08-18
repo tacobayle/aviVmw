@@ -244,6 +244,9 @@ serviceEngineGroup:
     vcpus_per_se: 2
     memory_per_se: 4096
     disk_per_se: 25
+    realtime_se_metrics:
+      enabled: true
+      duration: 0
   - name: seGroupGslb
     ha_mode: HA_MODE_SHARED
     min_scaleout_per_vs: 1
@@ -254,6 +257,26 @@ serviceEngineGroup:
     vcpus_per_se: 2
     memory_per_se: 8192
     disk_per_se: 25
+    realtime_se_metrics:
+      enabled: true
+      duration: 0
+  - name: &segroup2 seGroupCpuAutoScale
+    ha_mode: HA_MODE_SHARED
+    min_scaleout_per_vs: 1
+    buffer_se: 2
+    extra_shared_config_memory: 0
+    #vcenter_folder: ${var.folder}/se
+    vcenter_folder: ${var.folder}
+    vcpus_per_se: 1
+    memory_per_se: 2048
+    disk_per_se: 25
+    auto_rebalance: true
+    auto_rebalance_interval: 30
+    auto_rebalance_criteria:
+    - SE_AUTO_REBALANCE_CPU
+    realtime_se_metrics:
+      enabled: true
+      duration: 0
 avi_healthmonitor: ${var.avi_healthmonitor}
 avi_pool:
   name: &pool0 pool1
@@ -271,9 +294,13 @@ avi_virtualservice:
           enable_ssl: true
       pool_ref: *pool0
       enable_rhi: false
-avi_vsvip:
-  - name: *vs0
-
+    - name: &vs1 app2-se-cpu-auto-scale-out
+      services:
+        - port: 443
+          enable_ssl: true
+      pool_ref: *pool0
+      enable_rhi: false
+      se_group_ref: *segroup2
 
 EOF
   destination = "~/ansible/vars/fromTerraform.yml"

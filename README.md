@@ -47,7 +47,7 @@ Avi 20.1.1 with three controller nodes cluster
 1. Create a new folder
 2. Spin up n Avi Controller
 3. Spin up n backend VM(s) - (count based on the length of var.backendIpsMgt)
-4. Spin up n client server(s) - (count based on the length of var.clientIpsMgt)
+4. Spin up n client server(s) - (count based on the length of var.clientIpsMgt) - while true ; do ab -n 1000 -c 1000 https://100.64.133.51/ ; done 
 5. Create an ansible hosts file including a group for avi controller(s), a group for backend server(s)
 6. Spin up a jump server with ansible intalled - userdata to install package
 7. All the following tasks are done through Ansible via the jump VM:
@@ -56,8 +56,8 @@ Avi 20.1.1 with three controller nodes cluster
 - Configure Avi Controller System config.
 - Configure VMware Cloud with update of the Management network
 - Configure DNS/IPAM based on Avi
-- Configure SE group
-- Configure health monitor, pool, vsvip, virtualservice
+- Configure SE group (Default-Group, seGroupGslb, seGroupCpuAutoScale)
+- Configure health monitor, pool, vsvip, virtualservice (app1, app2-se-cpu-auto-scale-out)
 
 ## Run the terraform:
 ```

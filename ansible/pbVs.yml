@@ -90,9 +90,9 @@
       avi_vsvip:
         avi_credentials: "{{ avi_credentials }}"
         api_version: "{{ avi_credentials.api_version }}"
-        name: "{{ item.name }}"
+        name: "vsvip-{{ item.name }}"
         cloud_ref: "/api/cloud/?name={{ avi_cloud.name | default('Default-Cloud') }}"
-        tenant_ref: "/api/tenant?name={{ item.tenant_ref | default('admin') }}"
+        tenant_ref: "/api/tenant?name={{ tenant_ref | default('admin') }}"
         dns_info:
           - fqdn: "{{ item.dns_info.0 | default(item.name + '.' + dns.domain.name) }}"
         vip:
@@ -105,12 +105,12 @@
                   type: "{{ item.type | default(avi_network_vip.subnet.0.prefix.ip_addr.type) }}"
                   addr: "{{ item.addr | default(avi_network_vip.subnet.0.prefix.ip_addr.addr) }}"
       register: OutputVsVip
-      loop: "{{ avi_vsvip }}"
+      loop: "{{ avi_virtualservice.http }}"
       when:
-        - avi_vsvip is defined
+        - avi_virtualservice.http is defined
       tags:
         - vsvip
-        - vsHttp
+        - vs
 
     - name: Debug
       debug:
@@ -133,7 +133,24 @@
         services: "{{ item.services }}"
         pool_ref: "/api/pool?name={{ item.pool_ref }}"
         enable_rhi: "{{ item.enable_rhi | default('false') }}"
-        vsvip_ref: "{{ item.vsvip_ref | default(OutputVsVip.results.0.obj.uuid) }}"
+        vsvip_ref: "/api/vsvip/?name=vsvip-{{ item.name }}"
+        se_group_ref:  "/api/serviceenginegroup/?name={{ item.se_group_ref | default('Default-Group') }}"
+        analytics_policy:
+          udf_log_throttle: 10
+          full_client_logs:
+            duration: 30
+            throttle: 10
+            enabled: true
+          metrics_realtime_update:
+            duration: 0
+            enabled: true
+          significant_log_throttle: 0
+          client_insights: NO_INSIGHTS
+          full_client_logs:
+            duration: 30
+            throttle: 10
+            enabled: true
+          all_headers: true
       loop: "{{ avi_virtualservice.http }}"
       when:
         - avi_virtualservice.http is defined

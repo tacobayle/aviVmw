@@ -105,7 +105,7 @@ variable "backendIpsMgt" {
 #
 variable "clientIpsMgt" {
   type = list
-  default = ["10.206.112.124/22"]
+  default = ["10.206.112.114/22", "10.206.112.124/22"]
 }
 #
 ### Ansible variables
