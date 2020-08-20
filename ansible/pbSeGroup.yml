@@ -41,7 +41,6 @@
     - name: Updating SE group for auto-scale out group based on cpu
       avi_serviceenginegroup:
         cloud_ref: "/api/cloud/?name={{ avi_cloud.name | default('Default-Cloud') }}"
-        avi_api_update_method: put
         avi_credentials: "{{ avi_credentials }}"
         api_version: "{{ avi_credentials.api_version }}"
         avi_api_patch_op : add
