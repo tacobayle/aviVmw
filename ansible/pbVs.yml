@@ -137,10 +137,6 @@
         se_group_ref:  "/api/serviceenginegroup/?name={{ item.se_group_ref | default('Default-Group') }}"
         analytics_policy:
           udf_log_throttle: 10
-          full_client_logs:
-            duration: 30
-            throttle: 10
-            enabled: true
           metrics_realtime_update:
             duration: 0
             enabled: true
