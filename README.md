@@ -53,10 +53,11 @@ Avi 20.1.1 with one controller node
 6. Spin up a jump server with ansible intalled - userdata to install package
 7. Create an ansible hosts file - in the jump server
 8. Create a yaml variable file - in the jump server
+9. Call ansible to do the Avi configuration
 
 ## Run the terraform:
 ```
-terraform apply -auto-approve
+cd ~ ; git clone https://github.com/tacobayle/aviVmw ; cd aviVmw ; terraform init ; terraform apply -auto-approve
 # the terraform will output the command to destroy the environment.
 ```
 
