@@ -108,7 +108,7 @@ variable "backendIpsMgt" {
 #
 variable "clientIpsMgt" {
   type = list
-  default = ["10.206.112.114/22", "10.206.112.124/22"]
+  default = ["10.206.112.114/22"]
 }
 #
 ### Ansible variables
@@ -131,6 +131,9 @@ variable "avi_cloud" {
     vtype = "CLOUD_VCENTER"
     network = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
     dhcp_enabled = "true"
+    networkDhcpEnabled = "true"
+    networkExcludeDiscoveredSubnets = "true"
+    networkVcenterDvs= "true"
   }
 }
 #

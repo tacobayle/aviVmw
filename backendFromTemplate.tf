@@ -8,7 +8,8 @@ data "template_file" "backend_userdata" {
     password     = var.backend["password"]
     defaultGwMgt = var.backend["defaultGwMgt"]
     pubkey       = file(var.jump["public_key_path"])
-    ip_mgmt      = element(var.backendIpsMgt, count.index)
+    cidrMgt      = element(var.backendIpsMgt, count.index)
+    ip = split("/", element(var.backendIpsMgt, count.index))[0]
     netplanFile  = var.backend["netplanFile"]
     dnsMain      = var.backend["dnsMain"]
     dnsSec       = var.backend["dnsSec"]

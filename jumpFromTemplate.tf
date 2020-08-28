@@ -216,6 +216,9 @@ avi_cloud:
   name: ${var.avi_cloud["name"]}
   vtype: ${var.avi_cloud["vtype"]}
   network: ${var.avi_cloud["network"]}
+  networkDhcpEnabled: ${var.avi_cloud["networkDhcpEnabled"]}
+  networkExcludeDiscoveredSubnets: ${var.avi_cloud["networkExcludeDiscoveredSubnets"]}
+  networkVcenterDvs: ${var.avi_cloud["networkVcenterDvs"]}
   dhcp_enabled: ${var.avi_cloud["dhcp_enabled"]}
   vcenter_configuration:
     username: ${var.vsphere_user}

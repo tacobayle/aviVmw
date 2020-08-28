@@ -15,28 +15,43 @@ chpasswd:
     aviadmin: $password
   expire: False
 
-packages:
-  - language-pack-en
-
 write_files:
   - content: |
-      #!/bin/bash
-      # retrieve the last network interface
+      sudo systemctl disable systemd-resolved
+      sudo systemctl stop systemd-resolved
+      # retrieve the second interface name (dhcp)
+      ifaceDhcp=`ip -o link show | awk -F': ' '{print $2}' | head -2 | tail -1`
+      # retrieve the last network interface name (static config)
       iface=`ip -o link show | awk -F': ' '{print $2}' | tail -1`
-      # enable it, assign a static ip address, configure a default gw
+      # retrieve the second iface mac address
+      mac=`ip -o link show | awk -F'link/ether ' '{print $2}' | awk -F' ' '{print $1}'| head -2 | tail -1`
+      # populate /etc/hosts
+      hostname=`hostname`
+      echo "${ip} $hostname" | sudo tee -a /etc/hosts
+      # cp ${netplanFile} ${netplanFile}.old
+      # echo "network:" | sudo tee ${netplanFile}
+      # echo "    ethernets:" | sudo tee -a ${netplanFile}
+      # echo "        $ifaceDhcp:" | sudo tee -a ${netplanFile}
+      # echo "            dhcp4: true" | sudo tee -a ${netplanFile}
+      # echo "            match:" | sudo tee -a ${netplanFile}
+      # echo "                macaddress: $mac" | sudo tee -a ${netplanFile}
+      # echo "            set-name: $iface" | sudo tee -a ${netplanFile}
+      # echo "    version: 2" | sudo tee -a ${netplanFile}
+      # sudo netplan apply
+      # configure static interface
+      sudo ip link set $iface down
       sudo ip link set $iface up
-      sudo ip address add ${ip_mgmt} dev $iface
+      sudo ip address add ${cidrMgt} dev $iface
       sudo ip route add default via ${defaultGwMgt}
-      # save the variable netplan wo the last line of the current netplan file, recreate the netplan file with dns infor and apply it
-      netplan=`cat ${netplanFile} | head -n -1`
-      echo "$netplan" | sudo tee ${netplanFile}
-      # recreate the netplan file
-      echo $'            nameservers:\n                addresses: [${dnsMain}, ${dnsSec}]\n    version: 2' | sudo tee -a ${netplanFile}
-      sudo netplan apply
+      # configure /etc/resolv.conf
+      echo 'nameserver ${dnsMain}' | sudo tee /etc/resolv.conf
+      # test dns
+      ping -c 3 www.google.com
+      # apt config
       sudo apt update
       sudo apt install -y apache2
       echo "cloud init done" | tee /tmp/cloudInitDone.log
-      #while true ; do echo -e "HTTP/1.1 200 OK\n\nHello World - cloud is VMware - Node is $(hostname)" | sudo nc -N -l -p 80 ; done
+      #while true ; do echo -e "HTTP/1.1 200 OK\n\nHello World - cloud is Vcenter/NSX-T - Node is $(hostname)" | sudo nc -N -l -p 80 ; done
     path: /opt/bootstrap.sh
     permissions: 0755
 
