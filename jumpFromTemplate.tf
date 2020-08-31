@@ -183,7 +183,7 @@ resource "vsphere_virtual_machine" "jump" {
 
   provisioner "file" {
   content      = <<EOF
-
+---
 controller:
   environment: ${var.controller["environment"]}
   username: ${var.avi_user}
@@ -304,6 +304,10 @@ avi_network_backend:
           type: "${var.avi_network_backend["type"]}"
           addr: "${element(split("/", var.avi_network_backend["subnet"]),0)}"
 
+avi_applicationprofile:
+  http:
+    - name: &appProfile0 applicationProfileOpencart
+
 avi_servers:
 ${yamlencode(vsphere_virtual_machine.backend.*.guest_ip_addresses)}
 
@@ -342,6 +346,15 @@ avi_virtualservice:
       pool_ref: pool1
       enable_rhi: false
       se_group_ref: *segroup1
+    - name: &vs2 opencart
+      services:
+        - port: 80
+          enable_ssl: false
+        - port: 443
+          enable_ssl: true
+      pool_ref: *pool0
+      enable_rhi: false
+      application_profile_ref: *appProfile0
   dns:
     - name: app3-dns
       services:
@@ -350,6 +363,50 @@ avi_virtualservice:
       services:
         - port: 53
       se_group_ref: *segroup2
+
+avi_gslb:
+  dns_configs:
+    - domain_name: ${var.avi_gslb["domain"]}
+  sites:
+    - username:  ${var.avi_user}
+      password: ${var.avi_password}
+      cluster_uuid: "{{ outputCluster.obj.uuid | default('Null') }}"
+      member_type: ${var.avi_gslb["primaryType"]}
+      name: ${var.avi_gslb["primaryName"]}
+      ip_addresses:
+        - type: "V4"
+          addr: "{{ avi_credentials.controller }}"
+      dns_vses:
+      - domain_names:
+        - ${var.avi_gslb["domain"]}
+        dns_vs_uuid: "{{ outputVsDns.results.1.obj.uuid }}"
+    - cluster_uuid: "{{ gslbsiteopsOutput.obj.rx_uuid | default('Null') }}"
+      name: ${var.avi_gslb["secondaryName"]}
+      ip_addresses:
+      - addr: "{{ lookup('dig', '${var.avi_gslb["secondaryFqdn"]}' ) | default('Null') }}"
+        type: "V4"
+      username: ${var.avi_user}
+      password: ${var.avi_password}
+      member_type: ${var.avi_gslb["secondaryType"]}
+
+avi_gslbgeodbprofile:
+  - name: ${var.gslbProfile["name"]}
+    entries:
+      - priority: 10
+        file:
+          format: ${var.gslbProfile["fileFormat"]}
+          filename: ${var.gslbProfile["fileName"]}
+
+avi_gslbservice:
+  name: ${var.avi_gslbservice["name"]}
+  site_persistence_enabled: ${var.avi_gslbservice["site_persistence_enabled"]}
+  min_members: ${var.avi_gslbservice["min_members"]}
+  health_monitor_scope: ${var.avi_gslbservice["health_monitor_scope"]}
+  pool_algorithm: ${var.avi_gslbservice["pool_algorithm"]}
+  localPoolPriority: ${var.avi_gslbservice["localPoolPriority"]}
+  localPoolAlgorithm: ${var.avi_gslbservice["localPoolAlgorithm"]}
+  remotePoolPriority: ${var.avi_gslbservice["remotePoolPriority"]}
+  remotePoolAlgorithm: ${var.avi_gslbservice["remotePoolAlgorithm"]}
 
 EOF
   destination = "~/ansible/vars/fromTerraform.yml"

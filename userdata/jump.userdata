@@ -24,6 +24,8 @@ packages:
 write_files:
   - content: |
       #!/bin/sh
+      pip install dnspython
+      pip3 install dnspython
       pip install ansible
       pip install avisdk==${avisdkVersion}
       sudo -u ubuntu ansible-galaxy install -f avinetworks.avisdk

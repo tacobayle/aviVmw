@@ -169,6 +169,41 @@ variable "domain" {
   }
 }
 #
+variable "avi_gslb" {
+  type = map
+  default = {
+    domain = "gslb.avidemo.fr"
+    primaryName = "local_controller"
+    primaryType = "GSLB_ACTIVE_MEMBER"
+    secondaryName = "remote_controller"
+    secondaryType = "GSLB_PASSIVE_MEMBER"
+    secondaryFqdn = "controller.aws.avidemo.fr"
+  }
+}
+#
+variable "gslbProfile" {
+  type = map
+  default = {
+    name = "geoProfile"
+    fileFormat = "GSLB_GEODB_FILE_FORMAT_AVI"
+    fileName = "AviGeoDb.txt.gz"
+  }
+}
+variable "avi_gslbservice" {
+  type = map
+  default = {
+    name = "opencart"
+    site_persistence_enabled = "false"
+    min_members = "1"
+    health_monitor_scope = "GSLB_SERVICE_HEALTH_MONITOR_ALL_MEMBERS"
+    pool_algorithm = "GSLB_SERVICE_ALGORITHM_PRIORITY"
+    localPoolPriority = "20"
+    localPoolAlgorithm = "GSLB_ALGORITHM_ROUND_ROBIN"
+    remotePoolPriority = "10"
+    remotePoolAlgorithm = "GSLB_ALGORITHM_ROUND_ROBIN"
+  }
+}
+#
 variable "ansibleAviPbAbsent" {
   default     = "https://github.com/tacobayle/ansiblePbAviAbsent"
 }
