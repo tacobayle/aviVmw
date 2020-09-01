@@ -84,6 +84,34 @@ variable "backend" {
   }
 }
 #
+variable "opencartbackend" {
+  type = map
+  default = {
+    cpu = 2
+    memory = 4096
+    disk = 20
+    password = "Avi_2020"
+    wait_for_guest_net_timeout = 2
+    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+    opencartDownloadUrl = "https://github.com/opencart/opencart/releases/download/3.0.3.5/opencart-3.0.3.5.zip"
+    subnetSecondary = "/24"
+  }
+}
+#
+variable "mysql" {
+  type = map
+  default = {
+    cpu = 2
+    memory = 4096
+    disk = 20
+    password = "Avi_2020"
+    wait_for_guest_net_timeout = 2
+    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+    subnetSecondary = "/24"
+  }
+}
+#
+
 variable "client" {
   type = map
   default = {
@@ -103,7 +131,17 @@ variable "client" {
 #
 variable "backendIpsMgt" {
   type = list
-  default = ["10.206.112.120/22", "10.206.112.121/22", "10.206.112.123/22"]
+  default = ["10.206.112.120/22", "10.206.112.123/22"]
+}
+#
+variable "opencartbackendIpsMgt" {
+  type = list
+  default = ["100.64.129.201", "100.64.129.202"]
+}
+#
+variable "mysqlIpsMgt" {
+  type = list
+  default = ["100.64.129.200"]
 }
 #
 variable "clientIpsMgt" {

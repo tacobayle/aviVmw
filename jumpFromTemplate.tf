@@ -86,10 +86,96 @@ EOD
   }
 }
 
-# Ansible host file creation (finishing)
+# Ansible hosts file creation (continuing)
 
 resource "null_resource" "foo7" {
   depends_on = [null_resource.foo6]
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+    opencart:
+      hosts:
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo8" {
+  depends_on = [null_resource.foo7]
+  count = length(var.opencartbackendIpsMgt)
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+        ${vsphere_virtual_machine.opencartbackend[count.index].default_ip_address}:
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo9" {
+  depends_on = [null_resource.foo8]
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+      vars:
+        ansible_user: ubuntu
+        ansible_ssh_private_key_file: '~/.ssh/${basename(var.jump["private_key_path"])}'
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo10" {
+  depends_on = [null_resource.foo9]
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+    mysql:
+      hosts:
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo11" {
+  depends_on = [null_resource.foo10]
+  count = length(var.mysqlIpsMgt)
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+        ${vsphere_virtual_machine.mysql[count.index].default_ip_address}:
+EOF
+EOD
+  }
+}
+
+# Ansible hosts file creation (continuing)
+
+resource "null_resource" "foo12" {
+  depends_on = [null_resource.foo11]
+  provisioner "local-exec" {
+    command = <<EOD
+cat <<EOF >> ${var.ansibleHostFile}
+      vars:
+        ansible_user: ubuntu
+        ansible_ssh_private_key_file: '~/.ssh/${basename(var.jump["private_key_path"])}'
+EOF
+EOD
+  }
+}
+
+# Ansible host file creation (finishing)
+
+resource "null_resource" "foo13" {
+  depends_on = [null_resource.foo12]
   provisioner "local-exec" {
     command = <<EOD
 cat <<EOF >> ${var.ansibleHostFile}
@@ -117,7 +203,7 @@ data "vsphere_virtual_machine" "jump" {
 #
 resource "vsphere_virtual_machine" "jump" {
   name             = var.jump["name"]
-  depends_on = [null_resource.foo6]
+  depends_on = [null_resource.foo13]
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   folder           = vsphere_folder.folder.path
@@ -184,6 +270,8 @@ resource "vsphere_virtual_machine" "jump" {
   provisioner "file" {
   content      = <<EOF
 ---
+mysql_db_hostname: ${var.mysqlIpsMgt[0]}
+
 controller:
   environment: ${var.controller["environment"]}
   username: ${var.avi_user}
@@ -311,6 +399,9 @@ avi_applicationprofile:
 avi_servers:
 ${yamlencode(vsphere_virtual_machine.backend.*.guest_ip_addresses)}
 
+avi_servers_open_cart:
+${yamlencode(var.opencartbackendIpsMgt)}
+
 avi_healthmonitor:
   - name: &hm0 hm1
     receive_timeout: 1
@@ -328,6 +419,12 @@ avi_pool:
   name: &pool0 pool1
   lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
   health_monitor_refs: *hm0
+
+avi_pool_open_cart:
+  name: &pool1 poolOpencart
+  lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
+  health_monitor_refs: *hm0
+  application_persistence_profile_ref: System-Persistence-Client-IP
 
 avi_virtualservice:
   http:
@@ -352,7 +449,7 @@ avi_virtualservice:
           enable_ssl: false
         - port: 443
           enable_ssl: true
-      pool_ref: *pool0
+      pool_ref: *pool1
       enable_rhi: false
       application_profile_ref: *appProfile0
   dns:
@@ -415,7 +512,8 @@ EOF
   provisioner "remote-exec" {
     inline      = [
       "chmod 600 ~/.ssh/${basename(var.jump["private_key_path"])}",
-      "cd ansible ; git clone https://github.com/tacobayle/aviConfigure ; ansible-playbook -i hosts aviConfigure/local.yml --extra-vars @vars/fromTerraform.yml",
+      "cd ~/ansible ; git clone https://github.com/tacobayle/ansibleOpencartInstall ; ansible-playbook -i hosts ansibleOpencartInstall/local.yml --extra-vars @vars/fromTerraform.yml",
+      "cd ~/ansible ; git clone https://github.com/tacobayle/aviConfigure ; ansible-playbook -i hosts aviConfigure/local.yml --extra-vars @vars/fromTerraform.yml",
     ]
   }
 

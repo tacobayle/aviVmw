@@ -45,15 +45,17 @@ Avi 20.1.1 with one controller node
 1. All the paramaters/variables are stored in variables.tf
 
 ## Use the the terraform script to:
-1. Create a new folder
-2. Spin up n Avi Controller
-3. Spin up n backend VM(s) - (count based on the length of var.backendIpsMgt)
-4. Spin up n client server(s) - (count based on the length of var.clientIpsMgt) - while true ; do ab -n 1000 -c 1000 https://100.64.133.51/ ; done
-5. Create an ansible hosts file including a group for avi controller(s), a group for backend server(s)
-6. Spin up a jump server with ansible intalled - userdata to install package
-7. Create an ansible hosts file - in the jump server
-8. Create a yaml variable file - in the jump server
-9. Call ansible to do the Avi configuration
+- Create a new folder within v-center
+- Spin up n Avi Controller
+- Spin up n backend VM(s) - count based on the length of var.backendIpsMgt - with two interfaces: static for mgmt, dhcp for web traffic
+- Spin up n web opencart VM(s) - count based on the length of var.opencartbackendIpsMgt - with two interfaces: dhcp for mgmt, static for web traffic
+- Spin up one mysql server - with two interfaces: dhcp for mgmt, static for web traffic
+- Spin up n client server(s) - (count based on the length of var.clientIpsMgt) - while true ; do ab -n 1000 -c 1000 https://100.64.133.51/ ; done - with two interfaces: static for mgmt, dhcp for web traffic
+- Create an ansible hosts file including a group for avi controller(s), a group for backend server(s), a group for opencart and a group for mysql
+- Spin up a jump server with ansible intalled - userdata to install packages
+- Create a yaml variable file - in the jump server
+- Call ansible to run the opencart config (git clone)
+- Call ansible to do the Avi configuration (git clone)
 
 ## Run the terraform:
 ```

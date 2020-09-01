@@ -1,0 +1,46 @@
+#cloud-config
+users:
+  - default
+  - name: aviadmin
+    lock_passwd: true
+    shell: /bin/bash
+    sudo:  ALL=(ALL) NOPASSWD:ALL
+    chpasswd: {expire: False}
+    ssh_authorized_keys:
+      - ${pubkey}
+
+chpasswd:
+  list: |
+    ubuntu: $password
+    aviadmin: $password
+  expire: False
+
+write_files:
+  - content: |
+      #!/bin/bash
+      # retrieve the last network interface name (static config)
+      iface=`ip -o link show | awk -F': ' '{print $2}' | tail -1`
+      # populate /etc/hosts
+      hostname=`hostname`
+      echo "${cidrMgt} $hostname" | sudo tee -a /etc/hosts
+      # configure static interface
+      sudo ip link set $iface down
+      sudo ip link set $iface up
+      sudo ip address add ${cidrMgt}${subnetSecondary} dev $iface
+      # apt config
+      sudo apt-get update
+      sudo apt install -y mysql-server
+      sudo apt install -y python-pip
+      sudo apt install -y python-pip3
+      pip install PyMySQL
+      pip3 install PyMySQL
+      echo "cloud init done" | tee /tmp/cloudInitDone.log
+    path: /opt/bootstrap.sh
+    permissions: 0755
+
+  - content: |
+      ubuntu ALL=(ALL) NOPASSWD:ALL
+    path: /etc/sudoers.d/ubuntu
+
+runcmd:
+  - /opt/bootstrap.sh
