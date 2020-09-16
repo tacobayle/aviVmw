@@ -17,6 +17,7 @@ chpasswd:
 
 write_files:
   - content: |
+      #!/bin/bash
       sudo systemctl disable systemd-resolved
       sudo systemctl stop systemd-resolved
       # retrieve the second interface name (dhcp)
