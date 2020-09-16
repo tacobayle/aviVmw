@@ -476,7 +476,7 @@ avi_gslb:
       dns_vses:
       - domain_names:
         - ${var.avi_gslb["domain"]}
-        dns_vs_uuid: "{{ outputVsDns.results.1.obj.uuid }}"
+        dns_vs_uuid: "{{ outputVsDns.results.1.obj.uuid | default('Null') }}"
     - cluster_uuid: "{{ gslbsiteopsOutput.obj.rx_uuid | default('Null') }}"
       name: ${var.avi_gslb["secondaryName"]}
       ip_addresses:
