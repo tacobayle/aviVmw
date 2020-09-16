@@ -472,7 +472,7 @@ avi_gslb:
       name: ${var.avi_gslb["primaryName"]}
       ip_addresses:
         - type: "V4"
-          addr: "{{ avi_credentials.controller }}"
+          addr: "{{ avi_credentials.controller | default('Null') }}"
       dns_vses:
       - domain_names:
         - ${var.avi_gslb["domain"]}
