@@ -9,7 +9,7 @@ data "template_file" "opencartbackend_userdata" {
     pubkey       = file(var.jump["public_key_path"])
     cidrMgt      = element(var.opencartbackendIpsMgt, count.index)
     opencartDownloadUrl = var.opencartbackend["opencartDownloadUrl"]
-    domainName = var.domain["name"]
+    domainName = var.avi_gslb["domain"]
     subnetSecondary = var.opencartbackend["subnetSecondary"]
   }
 }
