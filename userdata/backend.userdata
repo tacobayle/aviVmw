@@ -51,8 +51,8 @@ write_files:
       # apt config
       sudo apt update
       sudo apt install -y apache2
-      #echo "cloud init done" | tee /tmp/cloudInitDone.log
-      while true ; do echo -e "HTTP/1.1 200 OK\n\nHello World - cloud is Vcenter/NSX-T - Node is $(hostname)" | sudo nc -N -l -p 80 ; done
+      echo "cloud init done" | tee /tmp/cloudInitDone.log
+      #while true ; do echo -e "HTTP/1.1 200 OK\n\nHello World - cloud is Vcenter/NSX-T - Node is $(hostname)" | sudo nc -N -l -p 80 ; done
     path: /opt/bootstrap.sh
     permissions: 0755
 
