@@ -36,7 +36,7 @@ variable "controller" {
     cpu = 8
     memory = 24768
     disk = 128
-    count = "1"
+    count = "3"
     version = "20.1.1-9071"
     floatingIp = "10.206.112.58"
     wait_for_guest_net_timeout = 2
