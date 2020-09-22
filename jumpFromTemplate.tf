@@ -316,6 +316,24 @@ avi_cloud:
     datacenter: ${var.dc}
     management_network: "/api/vimgrnwruntime/?name=${var.avi_cloud["network"]}"
 
+avi_cloud_second:
+  name: ${var.avi_cloud_second["name"]}
+  vtype: ${var.avi_cloud_second["vtype"]}
+  aws_configuration:
+    region: ${var.regionAws}
+    secret_access_key: ${var.secretKeyAws}
+    access_key_id: ${var.accessKeyAws}
+    route53_integration: true
+    asg_poll_interval: 60
+    vpc_id: ${aws_vpc.vpc[0].id}
+    zones:
+      - mgmt_network_uuid: ${aws_subnet.subnetAviSeMgt[0].id}
+        availability_zone: ${data.aws_availability_zones.available.names[0]}
+        mgmt_network_name: ${element(var.cidrSubnetAviSeMgt, 0)}
+      - mgmt_network_uuid: ${aws_subnet.subnetAviSeMgt[1].id}
+        availability_zone: ${data.aws_availability_zones.available.names[1]}
+        mgmt_network_name: ${element(var.cidrSubnetAviSeMgt, 1)}
+
 serviceEngineGroup:
   - name: &segroup0 Default-Group
     ha_mode: HA_MODE_SHARED

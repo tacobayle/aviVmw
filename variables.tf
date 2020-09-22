@@ -1,3 +1,52 @@
+# AWS variables
+#
+### AWS environment variable
+#
+variable "accessKeyAws" {}
+variable "secretKeyAws" {}
+variable "regionAws" {}
+#
+#
+#### AWS VPC
+#
+variable "cidrVpc" {
+  type = list
+  default = ["192.168.0.0/18"]
+}
+#
+variable "cidrSubnetBackend" {
+  type = list
+  default = ["192.168.4.0/24", "192.168.5.0/24"]
+}
+#
+variable "cidrSubnetAviSeMgt" {
+  type = list
+  default = ["192.168.40.0/24", "192.168.50.0/24"]
+}
+#
+variable "cidrSubnetAviVs" {
+  type = list
+  default = ["192.168.11.0/24", "192.168.12.0/24"]
+}
+#
+#### AWS Key Paris
+#
+variable "public_key_path" {
+  default = "~/.ssh/cloudKey.pub"
+}
+#
+#### AWS Compute Variables
+#
+#
+variable "autoScalingGroup" {
+  type = map
+  default = {
+    userdata = "userdata/backendGroup.sh"
+    privateKey = "~/.ssh/cloudKey"
+    type = "t2.micro"
+  }
+}
+#
 #
 ### VMware variables
 #
@@ -172,6 +221,14 @@ variable "avi_cloud" {
     networkDhcpEnabled = "true"
     networkExcludeDiscoveredSubnets = "true"
     networkVcenterDvs= "true"
+  }
+}
+#
+variable "avi_cloud_second" {
+  type = map
+  default = {
+    name = "cloudAws"
+    vtype = "CLOUD_AWS"
   }
 }
 #
