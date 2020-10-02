@@ -1,5 +1,10 @@
 
 
+resource "vsphere_tag" "ansible_group_backend" {
+  name             = "backend"
+  category_id      = vsphere_tag_category.ansible_group_backend.id
+}
+
 
 data "template_file" "backend_userdata" {
   count = length(var.backendIpsMgt)
@@ -58,6 +63,11 @@ resource "vsphere_virtual_machine" "backend" {
 
   clone {
     template_uuid = data.vsphere_virtual_machine.backend.id
+  }
+
+  tags = [
+        vsphere_tag.ansible_group_backend.id,
+  ]
 
     #customize {
 
@@ -68,7 +78,6 @@ resource "vsphere_virtual_machine" "backend" {
     #  ipv4_gateway = "10.0.0.1"
     #  dns_server_list = "8.8.8.8"
     #}
-  }
 
   vapp {
     properties = {

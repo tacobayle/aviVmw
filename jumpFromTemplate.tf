@@ -1,189 +1,6 @@
-# Ansible host file creation
-
-resource "null_resource" "foo1" {
-
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF > ${var.ansibleHostFile}
----
-all:
-  children:
-    controller:
-      hosts:
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo2" {
-  count = var.controller["count"]
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-        ${vsphere_virtual_machine.controller[count.index].default_ip_address}:
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo3" {
-  depends_on = [null_resource.foo2]
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-      vars:
-        ansible_user: admin
-        ansible_ssh_private_key_file: '~/.ssh/${basename(var.jump["private_key_path"])}'
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo4" {
-  depends_on = [null_resource.foo3]
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-    backend:
-      hosts:
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo5" {
-  depends_on = [null_resource.foo4]
-  count = length(var.backendIpsMgt)
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-        ${split("/", element(var.backendIpsMgt, count.index))[0]}:
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo6" {
-  depends_on = [null_resource.foo5]
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-      vars:
-        ansible_user: admin
-        ansible_ssh_private_key_file: '~/.ssh/${basename(var.jump["private_key_path"])}'
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo7" {
-  depends_on = [null_resource.foo6]
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-    opencart:
-      hosts:
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo8" {
-  depends_on = [null_resource.foo7]
-  count = length(var.opencartbackendIpsMgt)
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-        ${vsphere_virtual_machine.opencartbackend[count.index].default_ip_address}:
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo9" {
-  depends_on = [null_resource.foo8]
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-      vars:
-        ansible_user: ubuntu
-        ansible_ssh_private_key_file: '~/.ssh/${basename(var.jump["private_key_path"])}'
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo10" {
-  depends_on = [null_resource.foo9]
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-    mysql:
-      hosts:
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo11" {
-  depends_on = [null_resource.foo10]
-  count = length(var.mysqlIpsMgt)
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-        ${vsphere_virtual_machine.mysql[count.index].default_ip_address}:
-EOF
-EOD
-  }
-}
-
-# Ansible hosts file creation (continuing)
-
-resource "null_resource" "foo12" {
-  depends_on = [null_resource.foo11]
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-      vars:
-        ansible_user: ubuntu
-        ansible_ssh_private_key_file: '~/.ssh/${basename(var.jump["private_key_path"])}'
-EOF
-EOD
-  }
-}
-
-# Ansible host file creation (finishing)
-
-resource "null_resource" "foo13" {
-  depends_on = [null_resource.foo12]
-  provisioner "local-exec" {
-    command = <<EOD
-cat <<EOF >> ${var.ansibleHostFile}
-  vars:
-    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-EOF
-EOD
-  }
+resource "vsphere_tag" "ansible_group_jump" {
+  name             = "jump"
+  category_id      = vsphere_tag_category.ansible_group_jump.id
 }
 
 
@@ -193,6 +10,12 @@ data "template_file" "jumpbox_userdata" {
     password      = var.jump["password"]
     pubkey        = file(var.jump["public_key_path"])
     avisdkVersion = var.jump["avisdkVersion"]
+    ansibleVersion = var.jump["ansibleVersion"]
+    vsphere_user  = var.vsphere_user
+    vsphere_password = var.vsphere_password
+    vsphere_server = var.vsphere_server
+    username = var.jump["username"]
+    privateKey = var.jump["private_key_path"]
   }
 }
 #
@@ -203,7 +26,6 @@ data "vsphere_virtual_machine" "jump" {
 #
 resource "vsphere_virtual_machine" "jump" {
   name             = var.jump["name"]
-  depends_on = [null_resource.foo13]
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   folder           = vsphere_folder.folder.path
@@ -233,6 +55,11 @@ resource "vsphere_virtual_machine" "jump" {
   clone {
     template_uuid = data.vsphere_virtual_machine.jump.id
   }
+
+  tags = [
+        vsphere_tag.ansible_group_jump.id,
+  ]
+
 
   vapp {
     properties = {
@@ -279,6 +106,9 @@ controller:
   password: ${var.avi_password}
   floatingIp: ${var.controller["floatingIp"]}
   count: ${var.controller["count"]}
+
+controllerPrivateIps:
+${yamlencode(vsphere_virtual_machine.controller.*.default_ip_address)}
 
 avi_systemconfiguration:
   global_tenant_config:
@@ -512,8 +342,8 @@ EOF
   provisioner "remote-exec" {
     inline      = [
       "chmod 600 ~/.ssh/${basename(var.jump["private_key_path"])}",
-      "cd ~/ansible ; git clone https://github.com/tacobayle/ansibleOpencartInstall ; ansible-playbook -i hosts ansibleOpencartInstall/local.yml --extra-vars @vars/fromTerraform.yml",
-      "cd ~/ansible ; git clone https://github.com/tacobayle/aviConfigure ; ansible-playbook -i hosts aviConfigure/local.yml --extra-vars @vars/fromTerraform.yml",
+      "cd ~/ansible ; git clone https://github.com/tacobayle/ansibleOpencartInstall ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml ansibleOpencartInstall/local.yml --extra-vars @vars/fromTerraform.yml",
+      "cd ~/ansible ; git clone https://github.com/tacobayle/aviConfigure ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml aviConfigure/local.yml --extra-vars @vars/fromTerraform.yml",
     ]
   }
 

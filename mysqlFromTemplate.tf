@@ -1,4 +1,8 @@
 
+resource "vsphere_tag" "ansible_group_mysql" {
+  name             = "mysql"
+  category_id      = vsphere_tag_category.ansible_group_mysql.id
+}
 
 
 data "template_file" "mysql_userdata" {
@@ -55,6 +59,11 @@ resource "vsphere_virtual_machine" "mysql" {
   clone {
     template_uuid = data.vsphere_virtual_machine.mysql.id
   }
+
+  tags = [
+        vsphere_tag.ansible_group_mysql.id,
+  ]
+
 
   vapp {
     properties = {

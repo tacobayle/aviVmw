@@ -64,8 +64,12 @@ variable "jump" {
     wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     avisdkVersion = "18.2.9"
+    ansibleVersion = "2.9.12"
+    ansibleAviPbAbsent = "https://github.com/tacobayle/ansiblePbAviAbsent"
+    username = "ubuntu"
   }
 }
+
 #
 variable "backend" {
   type = map
@@ -242,6 +246,3 @@ variable "avi_gslbservice" {
   }
 }
 #
-variable "ansibleAviPbAbsent" {
-  default     = "https://github.com/tacobayle/ansiblePbAviAbsent"
-}
