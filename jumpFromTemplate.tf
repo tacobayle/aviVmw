@@ -10,7 +10,7 @@ data "template_file" "jumpbox_userdata" {
     password      = var.jump["password"]
     pubkey        = file(var.jump["public_key_path"])
     avisdkVersion = var.jump["avisdkVersion"]
-    ansibleVersion = var.jump["ansibleVersion"]
+    ansibleVersion = var.ansible["version"]
     vsphere_user  = var.vsphere_user
     vsphere_password = var.vsphere_password
     vsphere_server = var.vsphere_server
@@ -59,7 +59,6 @@ resource "vsphere_virtual_machine" "jump" {
   tags = [
         vsphere_tag.ansible_group_jump.id,
   ]
-
 
   vapp {
     properties = {
@@ -230,7 +229,7 @@ avi_servers:
 ${yamlencode(vsphere_virtual_machine.backend.*.guest_ip_addresses)}
 
 avi_servers_open_cart:
-${yamlencode(var.opencartbackendIpsMgt)}
+${yamlencode(var.opencartIpsMgt)}
 
 avi_healthmonitor:
   - name: &hm0 hm1
@@ -343,7 +342,7 @@ EOF
     inline      = [
       "chmod 600 ~/.ssh/${basename(var.jump["private_key_path"])}",
       "cd ~/ansible ; git clone https://github.com/tacobayle/ansibleOpencartInstall ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml ansibleOpencartInstall/local.yml --extra-vars @vars/fromTerraform.yml",
-      "cd ~/ansible ; git clone https://github.com/tacobayle/aviConfigure ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml aviConfigure/local.yml --extra-vars @vars/fromTerraform.yml",
+      "cd ~/ansible ; git clone ${var.ansible["aviConfigureUrl"]} --branch ${var.ansible["aviConfigureTag"]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml aviConfigure/local.yml --extra-vars @vars/fromTerraform.yml",
     ]
   }
 

@@ -3,7 +3,6 @@ resource "vsphere_tag" "ansible_group_controller" {
   category_id      = vsphere_tag_category.ansible_group_controller.id
 }
 
-
 data "vsphere_virtual_machine" "controller_template" {
   name          = "controller-${var.controller["version"]}-template"
   datacenter_id = data.vsphere_datacenter.dc.id

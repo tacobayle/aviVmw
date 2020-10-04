@@ -12,7 +12,7 @@ data "template_file" "mysql_userdata" {
     password     = var.mysql["password"]
     pubkey       = file(var.jump["public_key_path"])
     cidrMgt      = element(var.mysqlIpsMgt, count.index)
-    subnetSecondary = var.opencartbackend["subnetSecondary"]
+    subnetSecondary = var.opencart["subnetSecondary"]
   }
 }
 #
