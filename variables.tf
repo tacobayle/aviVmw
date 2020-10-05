@@ -23,7 +23,7 @@ variable "networkMgt" {
 }
 #
 variable "folder" {
-  default     = "NicolasTf"
+  default     = "NicolasTfVmw"
 }
 #
 variable "resource_pool" {
@@ -76,6 +76,8 @@ variable "ansible" {
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
     aviConfigureTag = "v1.66"
     version = "2.9.12"
+    opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
+    opencartInstallTag = "v1.19"
   }
 }
 
