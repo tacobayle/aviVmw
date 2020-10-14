@@ -74,7 +74,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.32"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v1.66"
+    aviConfigureTag = "v2.06"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -181,7 +181,6 @@ variable "avi_cloud" {
   type = map
   default = {
     name = "CloudVmw"
-    vtype = "CLOUD_VCENTER"
     network = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
     dhcp_enabled = "true"
     networkDhcpEnabled = "true"

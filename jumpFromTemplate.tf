@@ -129,9 +129,8 @@ avi_systemconfiguration:
     from_email: test@avicontroller.net
     smtp_type: SMTP_LOCAL_HOST
 
-avi_cloud:
-  name: ${var.avi_cloud["name"]}
-  vtype: ${var.avi_cloud["vtype"]}
+vmw:
+  name: &cloud0 cloudVmw # don't change it
   network: ${var.avi_cloud["network"]}
   networkDhcpEnabled: ${var.avi_cloud["networkDhcpEnabled"]}
   networkExcludeDiscoveredSubnets: ${var.avi_cloud["networkExcludeDiscoveredSubnets"]}
@@ -147,6 +146,7 @@ avi_cloud:
 
 serviceEngineGroup:
   - name: &segroup0 Default-Group
+    cloud_ref: *cloud0
     ha_mode: HA_MODE_SHARED
     min_scaleout_per_vs: 2
     buffer_se: 1
@@ -159,6 +159,7 @@ serviceEngineGroup:
       enabled: true
       duration: 0
   - name: &segroup1 seGroupCpuAutoScale
+    cloud_ref: *cloud0
     ha_mode: HA_MODE_SHARED
     min_scaleout_per_vs: 1
     buffer_se: 2
@@ -175,6 +176,7 @@ serviceEngineGroup:
       enabled: true
       duration: 0
   - name: &segroup2 seGroupGslb
+    cloud_ref: *cloud0
     ha_mode: HA_MODE_SHARED
     min_scaleout_per_vs: 1
     buffer_se: 0
@@ -245,11 +247,13 @@ avi_healthmonitor:
       - HTTP_5XX
 
 avi_pool:
+  cloud_ref: *cloud0
   name: &pool0 pool1
   lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
   health_monitor_refs: *hm0
 
 avi_pool_open_cart:
+  cloud_ref: *cloud0
   name: &pool1 poolOpencart
   lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
   health_monitor_refs: *hm0
@@ -258,6 +262,7 @@ avi_pool_open_cart:
 avi_virtualservice:
   http:
     - name: &vs0 app1
+      pool_ref: *pool0
       services:
         - port: 80
           enable_ssl: false
@@ -266,6 +271,7 @@ avi_virtualservice:
       pool_ref: *pool0
       enable_rhi: false
     - name: &vs1 app2-se-cpu-auto-scale-out
+      pool_ref: *pool0
       services:
         - port: 443
           enable_ssl: true
@@ -273,6 +279,7 @@ avi_virtualservice:
       enable_rhi: false
       se_group_ref: *segroup1
     - name: &vs2 opencart
+      pool_ref: *pool0
       services:
         - port: 80
           enable_ssl: false
@@ -283,9 +290,11 @@ avi_virtualservice:
       application_profile_ref: *appProfile0
   dns:
     - name: app3-dns
+      pool_ref: *pool0
       services:
         - port: 53
     - name: app4-gslb
+      pool_ref: *pool0
       services:
         - port: 53
       se_group_ref: *segroup2
