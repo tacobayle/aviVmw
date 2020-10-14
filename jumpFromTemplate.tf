@@ -270,16 +270,18 @@ avi_virtualservice:
           enable_ssl: true
       pool_ref: *pool0
       enable_rhi: false
+      cloud_ref: *cloud0
     - name: &vs1 app2-se-cpu-auto-scale-out
-      pool_ref: *pool0
+      pool_ref: *pool1
       services:
         - port: 443
           enable_ssl: true
       pool_ref: pool1
       enable_rhi: false
       se_group_ref: *segroup1
+      cloud_ref: *cloud0
     - name: &vs2 opencart
-      pool_ref: *pool0
+      pool_ref: *pool2
       services:
         - port: 80
           enable_ssl: false
@@ -288,13 +290,14 @@ avi_virtualservice:
       pool_ref: *pool1
       enable_rhi: false
       application_profile_ref: *appProfile0
+      cloud_ref: *cloud0
   dns:
     - name: app3-dns
-      pool_ref: *pool0
+      cloud_ref: *cloud0
       services:
         - port: 53
     - name: app4-gslb
-      pool_ref: *pool0
+      cloud_ref: *cloud0
       services:
         - port: 53
       se_group_ref: *segroup2
