@@ -89,7 +89,7 @@ resource "vsphere_virtual_machine" "jump" {
   }
 
   provisioner "file" {
-  source      = var.ansibleDirectory
+  source      = var.ansible["directory"]
   destination = "~/ansible"
   }
 

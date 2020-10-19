@@ -1,35 +1,31 @@
-#
-### VMware variables
-#
 variable "vsphere_user" {}
 variable "vsphere_password" {}
 variable "vsphere_server" {}
-#
-#
+
 variable "dc" {
   default     = "wdc-06-vc12"
 }
-#
+
 variable "cluster" {
   default     = "wdc-06-vc12c01"
 }
-#
+
 variable "datastore" {
   default     = "wdc-06-vc12c01-vsan"
 }
-#
+
 variable "networkMgt" {
   default     = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
 }
-#
+
 variable "folder" {
   default     = "NicolasTfVmw"
 }
-#
+
 variable "resource_pool" {
   default     = "wdc-06-vc12c01/Resources"
 }
-#
+
 variable "controller" {
   type = map
   default = {
@@ -46,11 +42,11 @@ variable "controller" {
     ntpMain = "95.81.173.155"
   }
 }
-#
+
 variable "wait_for_guest_net_timeout" {
   default = "5"
 }
-#
+
 variable "jump" {
   type = map
   default = {
@@ -78,10 +74,10 @@ variable "ansible" {
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
+    directory = "ansible"
   }
 }
 
-#
 variable "backend" {
   type = map
   default = {
@@ -98,7 +94,7 @@ variable "backend" {
     dnsSec = "10.206.8.131"
   }
 }
-#
+
 variable "opencart" {
   type = map
   default = {
@@ -112,7 +108,7 @@ variable "opencart" {
     subnetLastlength = "/24"
   }
 }
-#
+
 variable "mysql" {
   type = map
   default = {
@@ -125,7 +121,6 @@ variable "mysql" {
     subnetLastlength = "/24"
   }
 }
-#
 
 variable "client" {
   type = map
@@ -143,40 +138,30 @@ variable "client" {
     dnsSec = "10.206.8.131"
   }
 }
-#
+
 variable "backendIpsMgt" {
   type = list
   default = ["10.206.112.120/22", "10.206.112.123/22"]
 }
-#
+
 variable "opencartIps" {
   type = list
   default = ["100.64.129.201", "100.64.129.202"]
 }
-#
+
 variable "mysqlIps" {
   type = list
   default = ["100.64.129.200"]
 }
-#
+
 variable "clientIpsMgt" {
   type = list
   default = ["10.206.112.114/22"]
 }
-#
-### Ansible variables
-#
-variable "ansibleHostFile" {
-  default = "ansible/hosts"
-}
-#
-variable "ansibleDirectory" {
-  default = "ansible"
-}
-#
+
 variable "avi_password" {}
 variable "avi_user" {}
-#
+
 variable "avi_cloud" {
   type = map
   default = {
@@ -188,7 +173,7 @@ variable "avi_cloud" {
     networkVcenterDvs= "true"
   }
 }
-#
+
 variable "avi_network_vip" {
   type = map
   default = {
@@ -202,7 +187,7 @@ variable "avi_network_vip" {
     dhcp_enabled = "no"
   }
 }
-#
+
 variable "avi_network_backend" {
   type = map
   default = {
@@ -213,14 +198,14 @@ variable "avi_network_backend" {
     vcenter_dvs = "true"
   }
 }
-#
+
 variable "domain" {
   type = map
   default = {
     name = "vmw.avidemo.fr"
   }
 }
-#
+
 variable "avi_gslb" {
   type = map
   default = {
@@ -232,7 +217,7 @@ variable "avi_gslb" {
     secondaryFqdn = "controller.aws.avidemo.fr"
   }
 }
-#
+
 variable "gslbProfile" {
   type = map
   default = {
@@ -241,6 +226,7 @@ variable "gslbProfile" {
     fileName = "AviGeoDb.txt.gz"
   }
 }
+
 variable "avi_gslbservice" {
   type = map
   default = {
@@ -255,4 +241,3 @@ variable "avi_gslbservice" {
     remotePoolAlgorithm = "GSLB_ALGORITHM_ROUND_ROBIN"
   }
 }
-#

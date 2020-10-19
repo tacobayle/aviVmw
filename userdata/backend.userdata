@@ -53,7 +53,7 @@ write_files:
       sudo apt install -y apache2
       sudo mv /var/www/html/index.html /var/www/html/index.html.old
       ifaceFirstIp=`ip address show dev $ifaceFirstName | awk -F'inet ' '{print $2}' |  awk -F'/' '{print $1}'`
-      echo -e "Hello World - cloud is Vcenter - Node is $(hostname) - IP is $(ifaceFirstIp)" | sudo tee /var/www/html/index.html
+      echo -e "Hello World - cloud is Vcenter - Node is $(hostname) - IP is $(ip address show dev $(ip -o link show | awk -F': ' '{print $2}' | head -2 | tail -1) | awk -F'inet ' '{print $2}' |  awk -F'/' '{print $1}')" | sudo tee /var/www/html/index.html
       echo "cloud init done" | tee /tmp/cloudInitDone.log
       #while true ; do echo -e "HTTP/1.1 200 OK\n\nHello World - cloud is Vcenter/NSX-T - Node is $(hostname)" | sudo nc -N -l -p 80 ; done
 
