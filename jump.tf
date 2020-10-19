@@ -96,7 +96,7 @@ resource "vsphere_virtual_machine" "jump" {
   provisioner "file" {
   content      = <<EOF
 ---
-mysql_db_hostname: ${var.mysqlIpsMgt[0]}
+mysql_db_hostname: ${var.mysqlIps[0]}
 
 controller:
   environment: ${var.controller["environment"]}
@@ -231,7 +231,7 @@ avi_servers:
 ${yamlencode(vsphere_virtual_machine.backend.*.guest_ip_addresses)}
 
 avi_servers_open_cart:
-${yamlencode(var.opencartIpsMgt)}
+${yamlencode(var.opencartIps)}
 
 avi_healthmonitor:
   - name: &hm0 hm1
@@ -262,7 +262,6 @@ avi_pool_open_cart:
 avi_virtualservice:
   http:
     - name: &vs0 app1
-      pool_ref: *pool0
       services:
         - port: 80
           enable_ssl: false
@@ -271,8 +270,7 @@ avi_virtualservice:
       pool_ref: *pool0
       enable_rhi: false
       cloud_ref: *cloud0
-    - name: &vs1 app2-se-cpu-auto-scale-out
-      pool_ref: *pool0
+    - name: &vs1 app2-se-cpu-auto-scale
       services:
         - port: 443
           enable_ssl: true
@@ -281,7 +279,6 @@ avi_virtualservice:
       se_group_ref: *segroup1
       cloud_ref: *cloud0
     - name: &vs2 opencart
-      pool_ref: *pool1
       services:
         - port: 80
           enable_ssl: false

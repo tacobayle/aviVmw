@@ -6,13 +6,13 @@ resource "vsphere_tag" "ansible_group_mysql" {
 
 
 data "template_file" "mysql_userdata" {
-  count = length(var.mysqlIpsMgt)
+  count = length(var.mysqlIps)
   template = file("${path.module}/userdata/mysql.userdata")
   vars = {
     password     = var.mysql["password"]
     pubkey       = file(var.jump["public_key_path"])
-    cidrMgt      = element(var.mysqlIpsMgt, count.index)
-    subnetSecondary = var.opencart["subnetSecondary"]
+    cidr      = element(var.mysqlIps, count.index)
+    subnetLastlength = var.opencart["subnetLastlength"]
   }
 }
 #
@@ -22,7 +22,7 @@ data "vsphere_virtual_machine" "mysql" {
 }
 #
 resource "vsphere_virtual_machine" "mysql" {
-  count            = length(var.mysqlIpsMgt)
+  count            = length(var.mysqlIps)
   name             = "mysql-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id

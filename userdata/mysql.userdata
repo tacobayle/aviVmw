@@ -19,14 +19,14 @@ write_files:
   - content: |
       #!/bin/bash
       # retrieve the last network interface name (static config)
-      iface=`ip -o link show | awk -F': ' '{print $2}' | tail -1`
+      ifaceLastName=`ip -o link show | awk -F': ' '{print $2}' | tail -1`
       # populate /etc/hosts
       hostname=`hostname`
-      echo "${cidrMgt} $hostname" | sudo tee -a /etc/hosts
+      echo "${cidr} $hostname" | sudo tee -a /etc/hosts
       # configure static interface
-      sudo ip link set $iface down
-      sudo ip link set $iface up
-      sudo ip address add ${cidrMgt}${subnetSecondary} dev $iface
+      sudo ip link set $ifaceLastName down
+      sudo ip link set $ifaceLastName up
+      sudo ip address add ${cidr}${subnetLastlength} dev $ifaceLastName
       # apt config
       sudo apt-get update
       sudo apt install -y mysql-server

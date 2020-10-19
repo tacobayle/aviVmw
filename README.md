@@ -48,7 +48,7 @@ Avi 20.1.1 with one controller node
 - Create a new folder within v-center
 - Spin up n Avi Controller
 - Spin up n backend VM(s) - count based on the length of var.backendIpsMgt - with two interfaces: static for mgmt, dhcp for web traffic
-- Spin up n web opencart VM(s) - count based on the length of var.opencartIpsMgt - with two interfaces: dhcp for mgmt, static for web traffic
+- Spin up n web opencart VM(s) - count based on the length of var.opencartIps - with two interfaces: dhcp for mgmt, static for web traffic
 - Spin up one mysql server - with two interfaces: dhcp for mgmt, static for web traffic
 - Spin up n client server(s) - (count based on the length of var.clientIpsMgt) - while true ; do ab -n 1000 -c 1000 https://100.64.133.51/ ; done - with two interfaces: static for mgmt, dhcp for web traffic
 - Create an ansible hosts file including a group for avi controller(s), a group for backend server(s), a group for opencart and a group for mysql

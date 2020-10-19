@@ -4,15 +4,15 @@ resource "vsphere_tag" "ansible_group_opencart" {
 }
 
 data "template_file" "opencart_userdata" {
-  count = length(var.opencartIpsMgt)
+  count = length(var.opencartIps)
   template = file("${path.module}/userdata/opencart.userdata")
   vars = {
     password     = var.opencart["password"]
     pubkey       = file(var.jump["public_key_path"])
-    cidrMgt      = element(var.opencartIpsMgt, count.index)
+    cidr      = element(var.opencartIps, count.index)
     opencartDownloadUrl = var.opencart["opencartDownloadUrl"]
     domainName = var.avi_gslb["domain"]
-    subnetSecondary = var.opencart["subnetSecondary"]
+    subnetLastlength = var.opencart["subnetLastlength"]
   }
 }
 #
@@ -22,7 +22,7 @@ data "vsphere_virtual_machine" "opencart" {
 }
 #
 resource "vsphere_virtual_machine" "opencart" {
-  count            = length(var.opencartIpsMgt)
+  count            = length(var.opencartIps)
   name             = "opencart-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
