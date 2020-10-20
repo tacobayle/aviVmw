@@ -17,7 +17,7 @@ output "client" {
 }
 
 output "loadcommand" {
-  value = "while true ; do ab -n 1000 -c 1000 https://100.64.133.51/ ; done"
+  value = "while true ; do ab -n 50 -c 50 https://100.64.133.53/ ; done"
 }
 
 output "destroy" {
