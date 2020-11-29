@@ -32,7 +32,7 @@ variable "controller" {
     wait_for_guest_net_timeout = 2
     private_key_path = "~/.ssh/cloudKey"
     environment = "VMWARE"
-    dns =  ["8.8.8.8", "8.8.4.4"]
+    dns =  ["10.206.8.130", "10.206.8.131"]
     ntp = ["95.81.173.155", "188.165.236.162"]
     floatingIp = "10.41.134.130"
     from_email = "avicontroller@avidemo.fr"
