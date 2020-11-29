@@ -66,59 +66,59 @@ avi_servers_open_cart:
 ${yamlencode(var.opencartIps)}
 
 avi_pool:
-  name: ${var.avi_pool["name"]}
-  lb_algorithm: ${var.avi_pool["lb_algorithm"]}
-  cloud_ref: ${var.avi_cloud["name"]}
+  name: ${var.avi_pool.name}
+  lb_algorithm: ${var.avi_pool.lb_algorithm}
+  cloud_ref: ${var.avi_cloud.name}
 
 avi_pool_open_cart:
-  application_persistence_profile_ref: ${var.avi_pool_opencart["application_persistence_profile_ref"]}
-  name: ${var.avi_pool_opencart["name"]}
-  lb_algorithm: ${var.avi_pool_opencart["lb_algorithm"]}
-  cloud_ref: ${var.avi_cloud["name"]}
+  application_persistence_profile_ref: ${var.avi_pool_opencart.application_persistence_profile_ref}
+  name: ${var.avi_pool_opencart.name}
+  lb_algorithm: ${var.avi_pool_opencart.lb_algorithm}
+  cloud_ref: ${var.avi_cloud.name}
 
 avi_gslb:
   dns_configs:
-    - domain_name: ${var.avi_gslb["domain"]}
+    - domain_name: ${var.avi_gslb.domain}
   sites:
     - username:  ${var.avi_user}
       password: ${var.avi_password}
       cluster_uuid: "{{ outputCluster.obj.uuid | default('Null') }}"
-      member_type: ${var.avi_gslb["primaryType"]}
-      name: ${var.avi_gslb["primaryName"]}
+      member_type: ${var.avi_gslb.primaryType}
+      name: ${var.avi_gslb.primaryName}
       ip_addresses:
         - type: "V4"
           addr: "{{ avi_credentials.controller | default('Null') }}"
       dns_vses:
       - domain_names:
-        - ${var.avi_gslb["domain"]}
+        - ${var.avi_gslb.domain}
         dns_vs_uuid: "{{ outputVsDns.results.1.obj.uuid | default('Null') }}"
     - cluster_uuid: "{{ gslbsiteopsOutput.obj.rx_uuid | default('Null') }}"
-      name: ${var.avi_gslb["secondaryName"]}
+      name: ${var.avi_gslb.secondaryName}
       ip_addresses:
-      - addr: "{{ lookup('dig', '${var.avi_gslb["secondaryFqdn"]}' ) | default('Null') }}"
+      - addr: "{{ lookup('dig', '${var.avi_gslb.secondaryFqdn}' ) | default('Null') }}"
         type: "V4"
       username: ${var.avi_user}
       password: ${var.avi_password}
-      member_type: ${var.avi_gslb["secondaryType"]}
+      member_type: ${var.avi_gslb.secondaryType}
 
 avi_gslbgeodbprofile:
-  - name: ${var.gslbProfile["name"]}
+  - name: ${var.gslbProfile.name}
     entries:
       - priority: 10
         file:
-          format: ${var.gslbProfile["fileFormat"]}
-          filename: ${var.gslbProfile["fileName"]}
+          format: ${var.gslbProfile.fileFormat}
+          filename: ${var.gslbProfile.fileName}
 
 avi_gslbservice:
-  name: ${var.avi_gslbservice["name"]}
-  site_persistence_enabled: ${var.avi_gslbservice["site_persistence_enabled"]}
-  min_members: ${var.avi_gslbservice["min_members"]}
-  health_monitor_scope: ${var.avi_gslbservice["health_monitor_scope"]}
-  pool_algorithm: ${var.avi_gslbservice["pool_algorithm"]}
-  localPoolPriority: ${var.avi_gslbservice["localPoolPriority"]}
-  localPoolAlgorithm: ${var.avi_gslbservice["localPoolAlgorithm"]}
-  remotePoolPriority: ${var.avi_gslbservice["remotePoolPriority"]}
-  remotePoolAlgorithm: ${var.avi_gslbservice["remotePoolAlgorithm"]}
+  name: ${var.avi_gslbservice.name}
+  site_persistence_enabled: ${var.avi_gslbservice.site_persistence_enabled}
+  min_members: ${var.avi_gslbservice.min_members}
+  health_monitor_scope: ${var.avi_gslbservice.health_monitor_scope}
+  pool_algorithm: ${var.avi_gslbservice.pool_algorithm}
+  localPoolPriority: ${var.avi_gslbservice.localPoolPriority}
+  localPoolAlgorithm: ${var.avi_gslbservice.localPoolAlgorithm}
+  remotePoolPriority: ${var.avi_gslbservice.remotePoolPriority}
+  remotePoolAlgorithm: ${var.avi_gslbservice.remotePoolAlgorithm}
 
 EOF
     destination = var.ansible.yamlFile
@@ -134,9 +134,9 @@ EOF
 
   provisioner "remote-exec" {
     inline = [
-      "chmod 600 ~/.ssh/${basename(var.jump["private_key_path"])}",
-      "cd ~/ansible ; git clone ${var.ansible["opencartInstallUrl"]} --branch ${var.ansible["opencartInstallTag"]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml ansibleOpencartInstall/local.yml --extra-vars @vars/fromTerraform.yml",
-      "cd ~/ansible ; git clone ${var.ansible["aviConfigureUrl"]} --branch ${var.ansible["aviConfigureTag"]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml aviConfigure/local.yml --extra-vars @${var.ansible.jsonFile} --extra-vars @${var.ansible.yamlFile}",
+      "chmod 600 ~/.ssh/${basename(var.jump.private_key_path)}",
+      "cd ~/ansible ; git clone ${var.ansible.opencartInstallUrl} --branch ${var.ansible.opencartInstallTag} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml ansibleOpencartInstall/local.yml --extra-vars @${var.ansible.jsonFile}",
+      "cd ~/ansible ; git clone ${var.ansible.aviConfigureUrl} --branch ${var.ansible.aviConfigureTag} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml aviConfigure/local.yml --extra-vars @${var.ansible.jsonFile} --extra-vars @${var.ansible.yamlFile}",
     ]
   }
 }
