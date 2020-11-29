@@ -197,6 +197,7 @@ variable "avi_network_vip" {
 variable "avi_network_backend" {
   type = map
   default = {
+    name = "vxw-dvs-34-virtualwire-116-sid-6120115-wdc-06-vc12-avi-dev112"
     cidr = "100.64.129.0/24"
     type = "V4"
     dhcp_enabled = "yes"
@@ -214,7 +215,7 @@ variable "serviceEngineGroup" {
       min_scaleout_per_vs = 2
       buffer_se = 1
       extra_shared_config_memory = 0
-      vcenter_folder = "NicAviVmw"
+      vcenter_folder = "NicTfVmw"
       vcpus_per_se = 2
       memory_per_se = 4096
       disk_per_se = 25
@@ -230,7 +231,7 @@ variable "serviceEngineGroup" {
       min_scaleout_per_vs = 1
       buffer_se = 2
       extra_shared_config_memory = 0
-      vcenter_folder = "NicAviVmw"
+      vcenter_folder = "NicTfVmw"
       vcpus_per_se = 1
       memory_per_se = 2048
       disk_per_se = 25
@@ -251,7 +252,7 @@ variable "serviceEngineGroup" {
       min_scaleout_per_vs = 1
       buffer_se = 0
       extra_shared_config_memory = 2000
-      vcenter_folder = "NicAviVmw"
+      vcenter_folder = "NicTfVmw"
       vcpus_per_se = 2
       memory_per_se = 8192
       disk_per_se = 25
