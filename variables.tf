@@ -1,45 +1,43 @@
+#
+# Environment Variables
+#
 variable "vsphere_user" {}
 variable "vsphere_password" {}
 variable "vsphere_server" {}
-
-variable "dc" {
-  default     = "wdc-06-vc12"
-}
-
-variable "cluster" {
-  default     = "wdc-06-vc12c01"
-}
-
-variable "datastore" {
-  default     = "wdc-06-vc12c01-vsan"
-}
-
-variable "networkMgt" {
-  default     = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
-}
-
-variable "folder" {
-  default     = "NicolasTfVmw"
-}
-
-variable "resource_pool" {
-  default     = "wdc-06-vc12c01/Resources"
+#
+# Other Variables
+#
+variable "vcenter" {
+  type = map
+  default = {
+    dc = "wdc-06-vc12"
+    cluster = "wdc-06-vc12c01"
+    datastore = "wdc-06-vc12c01-vsan"
+    resource_pool = "wdc-06-vc12c01/Resources"
+    folder = "NicTfVmw"
+    networkMgmt = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
+  }
 }
 
 variable "controller" {
-  type = map
   default = {
     cpu = 8
     memory = 24768
     disk = 128
     count = "1"
     version = "20.1.1-9071"
-    floatingIp = "10.206.112.58"
+    floatingIp = "10.41.134.130"
     wait_for_guest_net_timeout = 2
     private_key_path = "~/.ssh/cloudKey"
     environment = "VMWARE"
-    dnsMain = "8.8.8.8"
-    ntpMain = "95.81.173.155"
+    dns =  ["8.8.8.8", "8.8.4.4"]
+    ntp = ["95.81.173.155", "188.165.236.162"]
+    floatingIp = "10.41.134.130"
+    from_email = "avicontroller@avidemo.fr"
+    se_in_provider_context = "false"
+    tenant_access_to_provider_se = "true"
+    tenant_vrf = "false"
+    aviCredsJsonFile = "~/.avicreds.json"
   }
 }
 
@@ -70,11 +68,13 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.36"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v2.12"
+    aviConfigureTag = "v2.97"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
     directory = "ansible"
+    jsonFile = "~/fromTf.json"
+    yamlFile = "~/fromTf.yml"
   }
 }
 
@@ -162,10 +162,17 @@ variable "clientIpsMgt" {
 variable "avi_password" {}
 variable "avi_user" {}
 
+variable "domain" {
+  type = map
+  default = {
+    name = "vmw.avidemo.fr"
+  }
+}
+
 variable "avi_cloud" {
   type = map
   default = {
-    name = "CloudVmw"
+    name = "CloudVmw" # don't change the value
     network = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
     dhcp_enabled = "true"
     networkDhcpEnabled = "true"
@@ -178,9 +185,9 @@ variable "avi_network_vip" {
   type = map
   default = {
     name = "vxw-dvs-34-virtualwire-120-sid-6120119-wdc-06-vc12-avi-dev116"
-    subnet = "100.64.133.0/24"
-    begin = "100.64.133.50"
-    end = "100.64.133.99"
+    cidr = "100.64.133.0/24"
+    begin = "50"
+    end = "99"
     type = "V4"
     exclude_discovered_subnets = "true"
     vcenter_dvs = "true"
@@ -191,7 +198,7 @@ variable "avi_network_vip" {
 variable "avi_network_backend" {
   type = map
   default = {
-    subnet = "100.64.129.0/24"
+    cidr = "100.64.129.0/24"
     type = "V4"
     dhcp_enabled = "yes"
     exclude_discovered_subnets = "true"
@@ -199,10 +206,152 @@ variable "avi_network_backend" {
   }
 }
 
-variable "domain" {
+variable "serviceEngineGroup" {
+  default = [
+    {
+      name = "Default-Group"
+      cloud_ref = "CloudVmw"
+      ha_mode = "HA_MODE_SHARED"
+      min_scaleout_per_vs = 2
+      buffer_se = 1
+      extra_shared_config_memory = 0
+      vcenter_folder = "NicAviVmw"
+      vcpus_per_se = 2
+      memory_per_se = 4096
+      disk_per_se = 25
+      realtime_se_metrics = {
+        enabled = true
+        duration = 0
+      }
+    },
+    {
+      name = "seGroupCpuAutoScale"
+      cloud_ref = "CloudVmw"
+      ha_mode = "HA_MODE_SHARED"
+      min_scaleout_per_vs = 1
+      buffer_se = 2
+      extra_shared_config_memory = 0
+      vcenter_folder = "NicAviVmw"
+      vcpus_per_se = 1
+      memory_per_se = 2048
+      disk_per_se = 25
+      auto_rebalance = true
+      auto_rebalance_interval = 30
+      auto_rebalance_criteria = [
+        "SE_AUTO_REBALANCE_CPU"
+              ]
+      realtime_se_metrics = {
+        enabled = true
+        duration = 0
+      }
+    },
+    {
+      name = "seGroupGslb"
+      cloud_ref = "CloudVmw"
+      ha_mode = "HA_MODE_SHARED"
+      min_scaleout_per_vs = 1
+      buffer_se = 0
+      extra_shared_config_memory = 2000
+      vcenter_folder = "NicAviVmw"
+      vcpus_per_se = 2
+      memory_per_se = 8192
+      disk_per_se = 25
+      realtime_se_metrics = {
+        enabled = true
+        duration = 0
+      }
+    }
+  ]
+}
+
+variable "avi_pool" {
   type = map
   default = {
-    name = "vmw.avidemo.fr"
+    name = "pool1"
+    lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
+  }
+}
+
+variable "avi_pool_opencart" {
+  type = map
+  default = {
+    name = "poolOpencart"
+    lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
+    application_persistence_profile_ref = "System-Persistence-Client-IP"
+  }
+}
+
+variable "avi_virtualservice" {
+  default = {
+    http = [
+      {
+        name = "app1"
+        pool_ref = "pool1"
+        cloud_ref = "CloudVmw"
+        services: [
+          {
+            port = 80
+            enable_ssl = "false"
+          },
+          {
+            port = 443
+            enable_ssl = "true"
+          }
+        ]
+      },
+      {
+        name = "app2-se-cpu-auto-scale"
+        pool_ref = "pool2"
+        cloud_ref = "CloudVmw"
+        services: [
+          {
+            port = 80
+            enable_ssl = "false"
+          },
+          {
+            port = 443
+            enable_ssl = "true"
+          }
+        ]
+        se_group_ref: "seGroupCpuAutoScale"
+      },
+      {
+        name = "opencart"
+        pool_ref = "poolOpencart"
+        cloud_ref = "CloudVmw"
+        services: [
+          {
+            port = 80
+            enable_ssl = "false"
+          },
+          {
+            port = 443
+            enable_ssl = "true"
+          }
+        ]
+      }
+    ]
+    dns = [
+      {
+        name = "app3-dns"
+        cloud_ref = "CloudVmw"
+        services: [
+          {
+            port = 53
+          }
+        ]
+      },
+      {
+        name = "app4-gslb"
+        cloud_ref = "CloudVmw"
+        services: [
+          {
+            port = 53
+          }
+        ]
+        se_group_ref: "seGroupGslb"
+      }
+    ]
   }
 }
 
