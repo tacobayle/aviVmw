@@ -21,11 +21,11 @@ controller:
   password: ${var.avi_password}
   floatingIp: ${var.controller.floatingIp}
   count: ${var.controller.count}
-  from_email: ${var.controller["from_email"]}
-  se_in_provider_context: ${var.controller["se_in_provider_context"]}
-  tenant_access_to_provider_se: ${var.controller["tenant_access_to_provider_se"]}
-  tenant_vrf: ${var.controller["tenant_vrf"]}
-  aviCredsJsonFile: ${var.controller["aviCredsJsonFile"]}
+  from_email: ${var.controller.from_email}
+  se_in_provider_context: ${var.controller.se_in_provider_context}
+  tenant_access_to_provider_se: ${var.controller.tenant_access_to_provider_se}
+  tenant_vrf: ${var.controller.tenant_vrf}
+  aviCredsJsonFile: ${var.controller.aviCredsJsonFile}
 
 controllerPrivateIps:
 ${yamlencode(vsphere_virtual_machine.controller.*.default_ip_address)}
@@ -135,8 +135,8 @@ EOF
   provisioner "remote-exec" {
     inline = [
       "chmod 600 ~/.ssh/${basename(var.jump.private_key_path)}",
-      "cd ~/ansible ; git clone ${var.ansible.opencartInstallUrl} --branch ${var.ansible.opencartInstallTag} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml ansibleOpencartInstall/local.yml --extra-vars @${var.ansible.jsonFile}",
-      "cd ~/ansible ; git clone ${var.ansible.aviConfigureUrl} --branch ${var.ansible.aviConfigureTag} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml aviConfigure/local.yml --extra-vars @${var.ansible.jsonFile} --extra-vars @${var.ansible.yamlFile}",
+      "cd ~/ansible ; git clone ${var.ansible.opencartInstallUrl} --branch ${var.ansible.opencartInstallTag} ; cd ${split("/", var.ansible.opencartInstallUrl)[4]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml local.yml --extra-vars @${var.ansible.jsonFile} --extra-vars @${var.ansible.yamlFile}",
+      "cd ~/ansible ; git clone ${var.ansible.aviConfigureUrl} --branch ${var.ansible.aviConfigureTag} ; cd ${split("/", var.ansible.aviConfigureUrl)[4]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml local.yml --extra-vars @${var.ansible.jsonFile} --extra-vars @${var.ansible.yamlFile}",
     ]
   }
 }
