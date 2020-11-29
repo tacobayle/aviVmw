@@ -4,6 +4,8 @@
 variable "vsphere_user" {}
 variable "vsphere_password" {}
 variable "vsphere_server" {}
+variable "avi_password" {}
+variable "avi_user" {}
 #
 # Other Variables
 #
@@ -68,7 +70,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.36"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v2.99"
+    aviConfigureTag = "v3.0"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -159,9 +161,6 @@ variable "clientIpsMgt" {
   default = ["10.206.112.114/22"]
 }
 
-variable "avi_password" {}
-variable "avi_user" {}
-
 variable "domain" {
   type = map
   default = {
@@ -172,7 +171,7 @@ variable "domain" {
 variable "avi_cloud" {
   type = map
   default = {
-    name = "CloudVmw" # don't change the value
+    name = "CloudVmw" # don't change this value
     network = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
     dhcp_enabled = "true"
     networkDhcpEnabled = "true"
