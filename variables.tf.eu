@@ -12,12 +12,12 @@ variable "avi_user" {}
 variable "vcenter" {
   type = map
   default = {
-    dc = "wdc-06-vc12"
-    cluster = "wdc-06-vc12c01"
-    datastore = "wdc-06-vc12c01-vsan"
-    resource_pool = "wdc-06-vc12c01/Resources"
+    dc = "sof2-01-vc08"
+    cluster = "sof2-01-vc08c01"
+    datastore = "sof2-01-vc08c01-vsan"
+    resource_pool = "sof2-01-vc08c01/Resources"
     folder = "NicTfVmw"
-    networkMgmt = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
+    networkMgmt = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
   }
 }
 
@@ -28,12 +28,12 @@ variable "controller" {
     disk = 128
     count = "1"
     version = "20.1.1-9071"
-    floatingIp = "10.206.112.58"
     wait_for_guest_net_timeout = 2
     private_key_path = "~/.ssh/cloudKey"
     environment = "VMWARE"
-    dns =  ["10.206.8.130", "10.206.8.131"]
+    dns =  ["10.23.108.1", "10.23.108.2"]
     ntp = ["95.81.173.155", "188.165.236.162"]
+    floatingIp = "10.41.134.130"
     from_email = "avicontroller@avidemo.fr"
     se_in_provider_context = "false"
     tenant_access_to_provider_se = "true"
