@@ -171,7 +171,7 @@ variable "domain" {
 variable "avi_cloud" {
   type = map
   default = {
-    name = "CloudVmw" # don't change this value
+    name = "cloudVmw" # don't change this value
     network = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
     dhcp_enabled = "true"
     networkDhcpEnabled = "true"
@@ -210,7 +210,7 @@ variable "serviceEngineGroup" {
   default = [
     {
       name = "Default-Group"
-      cloud_ref = "CloudVmw"
+      cloud_ref = "cloudVmw"
       ha_mode = "HA_MODE_SHARED"
       min_scaleout_per_vs = 2
       buffer_se = 1
@@ -226,7 +226,7 @@ variable "serviceEngineGroup" {
     },
     {
       name = "seGroupCpuAutoScale"
-      cloud_ref = "CloudVmw"
+      cloud_ref = "cloudVmw"
       ha_mode = "HA_MODE_SHARED"
       min_scaleout_per_vs = 1
       buffer_se = 2
@@ -247,7 +247,7 @@ variable "serviceEngineGroup" {
     },
     {
       name = "seGroupGslb"
-      cloud_ref = "CloudVmw"
+      cloud_ref = "cloudVmw"
       ha_mode = "HA_MODE_SHARED"
       min_scaleout_per_vs = 1
       buffer_se = 0
@@ -287,7 +287,7 @@ variable "avi_virtualservice" {
       {
         name = "app1"
         pool_ref = "pool1"
-        cloud_ref = "CloudVmw"
+        cloud_ref = "cloudVmw"
         services: [
           {
             port = 80
@@ -301,8 +301,8 @@ variable "avi_virtualservice" {
       },
       {
         name = "app2-se-cpu-auto-scale"
-        pool_ref = "pool2"
-        cloud_ref = "CloudVmw"
+        pool_ref = "pool1"
+        cloud_ref = "cloudVmw"
         services: [
           {
             port = 80
@@ -318,7 +318,7 @@ variable "avi_virtualservice" {
       {
         name = "opencart"
         pool_ref = "poolOpencart"
-        cloud_ref = "CloudVmw"
+        cloud_ref = "cloudVmw"
         services: [
           {
             port = 80
@@ -334,7 +334,7 @@ variable "avi_virtualservice" {
     dns = [
       {
         name = "app3-dns"
-        cloud_ref = "CloudVmw"
+        cloud_ref = "cloudVmw"
         services: [
           {
             port = 53
@@ -343,7 +343,7 @@ variable "avi_virtualservice" {
       },
       {
         name = "app4-gslb"
-        cloud_ref = "CloudVmw"
+        cloud_ref = "cloudVmw"
         services: [
           {
             port = 53
