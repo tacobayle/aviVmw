@@ -69,7 +69,7 @@ resource "vsphere_virtual_machine" "mysql" {
     properties = {
      hostname    = "mysql-${count.index}"
      public-keys = file(var.jump["public_key_path"])
-     user-data   = base64encode(data.template_file.mysql_userdata.rendered)
+     user-data   = base64encode(data.template_file.mysql_userdata[count.index].rendered)
    }
  }
 
