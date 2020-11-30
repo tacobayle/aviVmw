@@ -4,25 +4,26 @@ resource "vsphere_tag" "ansible_group_opencart" {
 }
 
 data "template_file" "opencart_userdata" {
-  count = length(var.opencartIps)
+  count = length(var.opencart.ipsCidrData)
   template = file("${path.module}/userdata/opencart.userdata")
   vars = {
-    password     = var.opencart["password"]
+    username     = var.opencart.username
     pubkey       = file(var.jump["public_key_path"])
-    cidr      = element(var.opencartIps, count.index)
+    ipCidrData      = element(var.opencart.ipsCidrData, count.index)
     opencartDownloadUrl = var.opencart["opencartDownloadUrl"]
     domainName = var.avi_gslb["domain"]
-    subnetLastlength = var.opencart["subnetLastlength"]
+    netplanFile  = var.opencart.netplanFile
+    maskData = var.opencart.maskData
   }
 }
-#
+
 data "vsphere_virtual_machine" "opencart" {
   name          = var.opencart["template_name"]
   datacenter_id = data.vsphere_datacenter.dc.id
 }
-#
+
 resource "vsphere_virtual_machine" "opencart" {
-  count            = length(var.opencartIps)
+  count = length(var.opencart.ipsCidrData)
   name             = "opencart-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
@@ -68,7 +69,6 @@ resource "vsphere_virtual_machine" "opencart" {
   vapp {
     properties = {
      hostname    = "opencart-${count.index}"
-     password    = var.opencart["password"]
      public-keys = file(var.jump["public_key_path"])
      user-data   = base64encode(data.template_file.opencart_userdata[count.index].rendered)
    }
@@ -78,7 +78,7 @@ resource "vsphere_virtual_machine" "opencart" {
     host        = self.default_ip_address
     type        = "ssh"
     agent       = false
-    user        = "ubuntu"
+    user        = var.opencart.username
     private_key = file(var.jump["private_key_path"])
     }
 

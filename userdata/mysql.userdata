@@ -30,7 +30,8 @@ write_files:
       echo "                macaddress: $macFirst" | sudo tee -a ${netplanFile}
       echo "            set-name: $ifaceFirstName" | sudo tee -a ${netplanFile}
       echo "        $ifaceLastName:" | sudo tee -a ${netplanFile}
-      echo "            dhcp4: true" | sudo tee -a ${netplanFile}
+      echo "            dhcp4: false" | sudo tee -a ${netplanFile}
+      echo "            addresses: [${ipCidrData}${maskData}]" | sudo tee -a ${netplanFile}
       echo "            match:" | sudo tee -a ${netplanFile}
       echo "                macaddress: $macLast" | sudo tee -a ${netplanFile}
       echo "            set-name: $ifaceLastName" | sudo tee -a ${netplanFile}

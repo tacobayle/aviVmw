@@ -5,11 +5,14 @@ resource "vsphere_tag" "ansible_group_mysql" {
 }
 
 data "template_file" "mysql_userdata" {
+  count = length(var.mysql.ipsCidrData)
   template = file("${path.module}/userdata/mysql.userdata")
   vars = {
     username     = var.mysql.username
     pubkey       = file(var.jump["public_key_path"])
     netplanFile  = var.mysql.netplanFile
+    ipCidrData = element(var.mysql.ipsCidrData, count.index)
+    maskData = var.mysql.maskData
   }
 }
 
@@ -19,7 +22,8 @@ data "vsphere_virtual_machine" "mysql" {
 }
 
 resource "vsphere_virtual_machine" "mysql" {
-  name             = "mysql"
+  count = length(var.mysql.ipsCidrData)
+  name             = "mysql-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   folder           = vsphere_folder.folder.path
@@ -43,7 +47,7 @@ resource "vsphere_virtual_machine" "mysql" {
 
   disk {
     size             = var.mysql["disk"]
-    label            = "mysql.lab_vmdk"
+    label            = "mysql-${count.index}.lab_vmdk"
     eagerly_scrub    = data.vsphere_virtual_machine.mysql.disks.0.eagerly_scrub
     thin_provisioned = data.vsphere_virtual_machine.mysql.disks.0.thin_provisioned
   }
@@ -63,7 +67,7 @@ resource "vsphere_virtual_machine" "mysql" {
 
   vapp {
     properties = {
-     hostname    = "mysql"
+     hostname    = "mysql-${count.index}"
      public-keys = file(var.jump["public_key_path"])
      user-data   = base64encode(data.template_file.mysql_userdata.rendered)
    }

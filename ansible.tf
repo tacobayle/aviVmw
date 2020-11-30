@@ -12,7 +12,7 @@ resource "null_resource" "foo7" {
   provisioner "file" {
     content = <<EOF
 ---
-mysql_db_hostname: ${vsphere_virtual_machine.mysql.guest_ip_addresses[2]}
+mysql_db_hostname: ${var.mysql.ipsCidrData[0]}
 
 controller:
   environment: ${var.controller.environment}
@@ -63,7 +63,7 @@ avi_servers:
 ${yamlencode(vsphere_virtual_machine.backend.*.guest_ip_addresses)}
 
 avi_servers_open_cart:
-${yamlencode(var.opencartIps)}
+${yamlencode(var.opencart.ipsCidrData)}
 
 avi_pool:
   name: ${var.avi_pool.name}
