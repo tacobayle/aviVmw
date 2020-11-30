@@ -112,7 +112,6 @@ variable "opencart" {
 }
 
 variable "mysql" {
-  type = map
   default = {
     cpu = 2
     memory = 4096
