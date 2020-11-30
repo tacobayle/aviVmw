@@ -42,10 +42,6 @@ variable "controller" {
   }
 }
 
-variable "wait_for_guest_net_timeout" {
-  default = "5"
-}
-
 variable "jump" {
   type = map
   default = {

@@ -12,12 +12,12 @@ variable "avi_user" {}
 variable "vcenter" {
   type = map
   default = {
-    dc = "wdc-06-vc12"
-    cluster = "wdc-06-vc12c01"
-    datastore = "wdc-06-vc12c01-vsan"
-    resource_pool = "wdc-06-vc12c01/Resources"
+    dc = "sof2-01-vc08"
+    cluster = "sof2-01-vc08c01"
+    datastore = "sof2-01-vc08c01-vsan"
+    resource_pool = "sof2-01-vc08c01/Resources"
     folder = "NicTfVmw"
-    networkMgmt = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
+    networkMgmt = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
   }
 }
 
@@ -28,11 +28,11 @@ variable "controller" {
     disk = 128
     count = "1"
     version = "20.1.1-9071"
-    floatingIp = "10.206.112.58"
+    floatingIp = "10.41.134.130"
     wait_for_guest_net_timeout = 2
     private_key_path = "~/.ssh/cloudKey"
     environment = "VMWARE"
-    dns =  ["10.206.8.130", "10.206.8.131"]
+    dns =  ["10.23.108.1", "10.23.108.2"]
     ntp = ["95.81.173.155", "188.165.236.162"]
     from_email = "avicontroller@avidemo.fr"
     se_in_provider_context = "false"
@@ -81,10 +81,10 @@ variable "backend" {
     memory = 4096
     disk = 20
     username = "ubuntu"
-    network = "vxw-dvs-34-virtualwire-116-sid-6120115-wdc-06-vc12-avi-dev112"
+    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
     wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    ipsData = ["100.64.129.203", "100.64.129.204"]
+    ipsData = ["100.64.130.203", "100.64.130.204"]
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
     maskData = "/24"
   }
@@ -99,7 +99,7 @@ variable "opencart" {
     wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     opencartDownloadUrl = "https://github.com/opencart/opencart/releases/download/3.0.3.5/opencart-3.0.3.5.zip"
-    ipsData = ["100.64.129.201", "100.64.129.202"]
+    ipsData = ["100.64.130.201", "100.64.130.202"]
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
     maskData = "/24"
   }
@@ -114,7 +114,7 @@ variable "mysql" {
     wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    ipsData = ["100.64.129.200"]
+    ipsData = ["100.64.130.200"]
     maskData = "/24"
   }
 }
@@ -127,7 +127,7 @@ variable "client" {
     memory = 4096
     disk = 20
     username = "ubuntu"
-    network = "vxw-dvs-34-virtualwire-120-sid-6120119-wdc-06-vc12-avi-dev116"
+    network = "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114"
     wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
@@ -145,7 +145,7 @@ variable "avi_cloud" {
   type = map
   default = {
     name = "cloudVmw" # don't change this value
-    network = "vxw-dvs-34-virtualwire-3-sid-6120002-wdc-06-vc12-avi-mgmt"
+    network = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
     dhcp_enabled = "true"
     networkDhcpEnabled = "true"
     networkExcludeDiscoveredSubnets = "true"
@@ -156,8 +156,8 @@ variable "avi_cloud" {
 variable "avi_network_vip" {
   type = map
   default = {
-    name = "vxw-dvs-34-virtualwire-120-sid-6120119-wdc-06-vc12-avi-dev116"
-    cidr = "100.64.133.0/24"
+    name = "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114"
+    cidr = "100.64.131.0/24"
     begin = "50"
     end = "99"
     type = "V4"
@@ -170,8 +170,8 @@ variable "avi_network_vip" {
 variable "avi_network_backend" {
   type = map
   default = {
-    name = "vxw-dvs-34-virtualwire-116-sid-6120115-wdc-06-vc12-avi-dev112"
-    cidr = "100.64.129.0/24"
+    name = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+    cidr = "100.64.130.0/24"
     type = "V4"
     dhcp_enabled = "yes"
     exclude_discovered_subnets = "true"
