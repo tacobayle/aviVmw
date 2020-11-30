@@ -12,7 +12,7 @@ resource "null_resource" "foo7" {
   provisioner "file" {
     content = <<EOF
 ---
-mysql_db_hostname: ${var.mysqlIps[0]}
+mysql_db_hostname: ${vsphere_virtual_machine.mysql.guest_ip_addresses[2]}
 
 controller:
   environment: ${var.controller.environment}

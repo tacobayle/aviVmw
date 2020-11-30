@@ -4,26 +4,22 @@ resource "vsphere_tag" "ansible_group_mysql" {
   category_id      = vsphere_tag_category.ansible_group_mysql.id
 }
 
-
 data "template_file" "mysql_userdata" {
-  count = length(var.mysqlIps)
   template = file("${path.module}/userdata/mysql.userdata")
   vars = {
-    password     = var.mysql["password"]
+    username     = var.mysql.username
     pubkey       = file(var.jump["public_key_path"])
-    cidr      = element(var.mysqlIps, count.index)
-    subnetLastlength = var.opencart["subnetLastlength"]
+    netplanFile  = var.mysql.netplanFile
   }
 }
-#
+
 data "vsphere_virtual_machine" "mysql" {
   name          = var.mysql["template_name"]
   datacenter_id = data.vsphere_datacenter.dc.id
 }
-#
+
 resource "vsphere_virtual_machine" "mysql" {
-  count            = length(var.mysqlIps)
-  name             = "mysql-${count.index}"
+  name             = "mysql"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   folder           = vsphere_folder.folder.path
@@ -47,7 +43,7 @@ resource "vsphere_virtual_machine" "mysql" {
 
   disk {
     size             = var.mysql["disk"]
-    label            = "mysql-${count.index}.lab_vmdk"
+    label            = "mysql.lab_vmdk"
     eagerly_scrub    = data.vsphere_virtual_machine.mysql.disks.0.eagerly_scrub
     thin_provisioned = data.vsphere_virtual_machine.mysql.disks.0.thin_provisioned
   }
@@ -67,10 +63,9 @@ resource "vsphere_virtual_machine" "mysql" {
 
   vapp {
     properties = {
-     hostname    = "mysql-${count.index}"
-     password    = var.mysql["password"]
+     hostname    = "mysql"
      public-keys = file(var.jump["public_key_path"])
-     user-data   = base64encode(data.template_file.mysql_userdata[count.index].rendered)
+     user-data   = base64encode(data.template_file.mysql_userdata.rendered)
    }
  }
 
@@ -78,7 +73,7 @@ resource "vsphere_virtual_machine" "mysql" {
     host        = self.default_ip_address
     type        = "ssh"
     agent       = false
-    user        = "ubuntu"
+    user        = var.mysql.username
     private_key = file(var.jump["private_key_path"])
     }
 

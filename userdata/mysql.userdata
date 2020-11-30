@@ -1,7 +1,6 @@
 #cloud-config
 users:
-  - default
-  - name: aviadmin
+  - name: ${username}
     lock_passwd: true
     shell: /bin/bash
     sudo:  ALL=(ALL) NOPASSWD:ALL
@@ -9,24 +8,35 @@ users:
     ssh_authorized_keys:
       - ${pubkey}
 
-chpasswd:
-  list: |
-    ubuntu: $password
-    aviadmin: $password
-  expire: False
+packages:
+  - language-pack-en
 
 write_files:
   - content: |
       #!/bin/bash
-      # retrieve the last network interface name (static config)
+      #
+      # networking
+      #
+      ifaceFirstName=`ip -o link show | awk -F': ' '{print $2}' | head -2 | tail -1`
+      macFirst=`ip -o link show | awk -F'link/ether ' '{print $2}' | awk -F' ' '{print $1}' | head -2 | tail -1`
       ifaceLastName=`ip -o link show | awk -F': ' '{print $2}' | tail -1`
-      # populate /etc/hosts
-      hostname=`hostname`
-      echo "${cidr} $hostname" | sudo tee -a /etc/hosts
-      # configure static interface
-      sudo ip link set $ifaceLastName down
-      sudo ip link set $ifaceLastName up
-      sudo ip address add ${cidr}${subnetLastlength} dev $ifaceLastName
+      macLast=`ip -o link show | awk -F'link/ether ' '{print $2}' | awk -F' ' '{print $1}'| tail -1`
+      cp ${netplanFile} ${netplanFile}.old
+      echo "network:" | sudo tee ${netplanFile}
+      echo "    ethernets:" | sudo tee -a ${netplanFile}
+      echo "        $ifaceFirstName:" | sudo tee -a ${netplanFile}
+      echo "            dhcp4: true" | sudo tee -a ${netplanFile}
+      echo "            match:" | sudo tee -a ${netplanFile}
+      echo "                macaddress: $macFirst" | sudo tee -a ${netplanFile}
+      echo "            set-name: $ifaceFirstName" | sudo tee -a ${netplanFile}
+      echo "        $ifaceLastName:" | sudo tee -a ${netplanFile}
+      echo "            dhcp4: true" | sudo tee -a ${netplanFile}
+      echo "            match:" | sudo tee -a ${netplanFile}
+      echo "                macaddress: $macLast" | sudo tee -a ${netplanFile}
+      echo "            set-name: $ifaceLastName" | sudo tee -a ${netplanFile}
+      echo "    version: 2" | sudo tee -a ${netplanFile}
+      sudo netplan apply
+      sleep 20
       # apt config
       sudo apt-get update
       sudo apt install -y mysql-server

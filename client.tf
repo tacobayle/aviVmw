@@ -4,43 +4,40 @@ resource "vsphere_tag" "ansible_group_client" {
 }
 
 data "template_file" "client_userdata" {
-  count = length(var.clientIpsMgt)
+  count = var.client.count
   template = file("${path.module}/userdata/client.userdata")
   vars = {
-    password     = var.client["password"]
-    defaultGwMgt = var.client["defaultGwMgt"]
+    username     = var.client.username
     pubkey       = file(var.jump["public_key_path"])
-    ip_mgmt      = element(var.clientIpsMgt, count.index)
-    netplanFile  = var.client["netplanFile"]
-    dnsMain      = var.client["dnsMain"]
-    dnsSec       = var.client["dnsSec"]
+    netplanFile  = var.client.netplanFile
   }
 }
-#
+
 data "vsphere_virtual_machine" "client" {
   name          = var.client["template_name"]
   datacenter_id = data.vsphere_datacenter.dc.id
 }
-#
+
 resource "vsphere_virtual_machine" "client" {
-  count            = length(var.clientIpsMgt)
+  count = var.client.count
   name             = "client-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   folder           = vsphere_folder.folder.path
 
   network_interface {
-                      network_id = data.vsphere_network.networkClient.id
-  }
-
-  network_interface {
                       network_id = data.vsphere_network.networkMgt.id
   }
 
+  network_interface {
+                      network_id = data.vsphere_network.networkClient.id
+  }
+
+
+
   num_cpus = var.client["cpu"]
   memory = var.client["memory"]
-  #wait_for_guest_net_timeout = var.client["wait_for_guest_net_timeout"]
-  wait_for_guest_net_routable = var.client["wait_for_guest_net_routable"]
+  wait_for_guest_net_timeout = var.client["wait_for_guest_net_timeout"]
   guest_id = data.vsphere_virtual_machine.client.guest_id
   scsi_type = data.vsphere_virtual_machine.client.scsi_type
   scsi_bus_sharing = data.vsphere_virtual_machine.client.scsi_bus_sharing
@@ -65,15 +62,6 @@ resource "vsphere_virtual_machine" "client" {
         vsphere_tag.ansible_group_client.id,
   ]
 
-    #customize {
-
-    #  network_interface {
-    #    ipv4_address = "10.0.0.10"
-    #    ipv4_netmask = 24
-    #  }
-    #  ipv4_gateway = "10.0.0.1"
-    #  dns_server_list = "8.8.8.8"
-    #}
 
   vapp {
     properties = {
@@ -85,10 +73,10 @@ resource "vsphere_virtual_machine" "client" {
  }
 
   connection {
-    host        = split("/", element(var.clientIpsMgt, count.index))[0]
+    host        = self.default_ip_address
     type        = "ssh"
     agent       = false
-    user        = "ubuntu"
+    user        = var.client.username
     private_key = file(var.jump["private_key_path"])
     }
 

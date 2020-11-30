@@ -1,7 +1,6 @@
 #cloud-config
 users:
-  - default
-  - name: aviadmin
+  - name: ${username}
     lock_passwd: true
     shell: /bin/bash
     sudo:  ALL=(ALL) NOPASSWD:ALL
@@ -9,39 +8,40 @@ users:
     ssh_authorized_keys:
       - ${pubkey}
 
-chpasswd:
-  list: |
-    ubuntu: $password
-    aviadmin: $password
-  expire: False
-
 packages:
   - language-pack-en
 
 write_files:
   - content: |
       #!/bin/bash
-      # retrieve the last network interface
-      iface=`ip -o link show | awk -F': ' '{print $2}' | tail -1`
-      # enable it, assign a static ip address, configure a default gw
-      sudo ip link set $iface up
-      sudo ip address add ${ip_mgmt} dev $iface
-      sudo ip route add default via ${defaultGwMgt}
-      # save the variable netplan wo the last line of the current netplan file, recreate the netplan file with dns infor and apply it
-      netplan=`cat ${netplanFile} | head -n -1`
-      echo "$netplan" | sudo tee ${netplanFile}
-      # recreate the netplan file
-      echo $'            nameservers:\n                addresses: [${dnsMain}, ${dnsSec}]\n    version: 2' | sudo tee -a ${netplanFile}
+      #
+      # networking
+      #
+      ifaceFirstName=`ip -o link show | awk -F': ' '{print $2}' | head -2 | tail -1`
+      macFirst=`ip -o link show | awk -F'link/ether ' '{print $2}' | awk -F' ' '{print $1}' | head -2 | tail -1`
+      ifaceLastName=`ip -o link show | awk -F': ' '{print $2}' | tail -1`
+      macLast=`ip -o link show | awk -F'link/ether ' '{print $2}' | awk -F' ' '{print $1}'| tail -1`
+      cp ${netplanFile} ${netplanFile}.old
+      echo "network:" | sudo tee ${netplanFile}
+      echo "    ethernets:" | sudo tee -a ${netplanFile}
+      echo "        $ifaceFirstName:" | sudo tee -a ${netplanFile}
+      echo "            dhcp4: true" | sudo tee -a ${netplanFile}
+      echo "            match:" | sudo tee -a ${netplanFile}
+      echo "                macaddress: $macFirst" | sudo tee -a ${netplanFile}
+      echo "            set-name: $ifaceFirstName" | sudo tee -a ${netplanFile}
+      echo "        $ifaceLastName:" | sudo tee -a ${netplanFile}
+      echo "            dhcp4: true" | sudo tee -a ${netplanFile}
+      echo "            match:" | sudo tee -a ${netplanFile}
+      echo "                macaddress: $macLast" | sudo tee -a ${netplanFile}
+      echo "            set-name: $ifaceLastName" | sudo tee -a ${netplanFile}
+      echo "    version: 2" | sudo tee -a ${netplanFile}
       sudo netplan apply
+      sleep 20
       sudo apt update
       sudo apt-get install -y apache2-utils
       echo "cloud init done" | tee /tmp/cloudInitDone.log
     path: /opt/bootstrap.sh
     permissions: 0755
-
-  - content: |
-      ubuntu ALL=(ALL) NOPASSWD:ALL
-    path: /etc/sudoers.d/ubuntu
 
 runcmd:
   - /opt/bootstrap.sh

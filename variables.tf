@@ -116,10 +116,10 @@ variable "mysql" {
     cpu = 2
     memory = 4096
     disk = 20
-    password = "Avi_2020"
+    username = "ubuntu"
     wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    subnetLastlength = "/24"
+    netplanFile = "/etc/netplan/50-cloud-init.yaml"
   }
 }
 
@@ -127,16 +127,14 @@ variable "client" {
   type = map
   default = {
     cpu = 2
+    count = 2
     memory = 4096
     disk = 20
-    password = "Avi_2020"
+    username = "ubuntu"
     network = "vxw-dvs-34-virtualwire-120-sid-6120119-wdc-06-vc12-avi-dev116"
-    wait_for_guest_net_routable = "false"
+    wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    defaultGwMgt = "10.206.112.1"
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    dnsMain = "10.206.8.130"
-    dnsSec = "10.206.8.131"
   }
 }
 
@@ -148,16 +146,6 @@ variable "backendIpsMgt" {
 variable "opencartIps" {
   type = list
   default = ["100.64.129.201", "100.64.129.202"]
-}
-
-variable "mysqlIps" {
-  type = list
-  default = ["100.64.129.200"]
-}
-
-variable "clientIpsMgt" {
-  type = list
-  default = ["10.206.112.114/22"]
 }
 
 variable "domain" {
