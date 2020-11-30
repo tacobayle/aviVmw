@@ -9,7 +9,7 @@ output "controllers" {
 }
 
 output "backend" {
-  value = var.backendIpsMgt.*
+  value = vsphere_virtual_machine.backend.*.default_ip_address
 }
 
 output "client" {
