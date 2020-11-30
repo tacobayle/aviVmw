@@ -105,7 +105,7 @@ variable "opencart" {
     wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     opencartDownloadUrl = "https://github.com/opencart/opencart/releases/download/3.0.3.5/opencart-3.0.3.5.zip"
-    ipsCidrData = ["100.64.129.201", "100.64.129.202"]
+    ipsData = ["100.64.129.201", "100.64.129.202"]
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
     maskData = "/24"
   }

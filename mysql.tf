@@ -11,7 +11,7 @@ data "template_file" "mysql_userdata" {
     username     = var.mysql.username
     pubkey       = file(var.jump["public_key_path"])
     netplanFile  = var.mysql.netplanFile
-    ipCidrData = element(var.mysql.ipsCidrData, count.index)
+    ipData = element(var.mysql.ipsData, count.index)
     maskData = var.mysql.maskData
   }
 }

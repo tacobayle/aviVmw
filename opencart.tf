@@ -9,7 +9,7 @@ data "template_file" "opencart_userdata" {
   vars = {
     username     = var.opencart.username
     pubkey       = file(var.jump["public_key_path"])
-    ipCidrData      = element(var.opencart.ipsCidrData, count.index)
+    ipData      = element(var.opencart.ipsData, count.index)
     opencartDownloadUrl = var.opencart["opencartDownloadUrl"]
     domainName = var.avi_gslb["domain"]
     netplanFile  = var.opencart.netplanFile
