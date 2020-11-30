@@ -40,6 +40,7 @@ write_files:
       sleep 20
       # apt config
       sudo apt-get update
+      sudo apt install -y open-vm-tools
       sudo apt install -y mysql-server
       sudo apt install -y python-pip
       sudo apt install -y python-pip3

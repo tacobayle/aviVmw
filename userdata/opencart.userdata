@@ -37,6 +37,7 @@ write_files:
       sleep 20
       sudo apt-add-repository -y ppa:ondrej/php
       sudo apt-get update
+      sudo apt install -y open-vm-tools
       sudo apt install -y php7.4
       sudo apt install -y php7.4-{bcmath,bz2,intl,gd,mbstring,mysql,zip,curl,xml,dev}
       sudo apt install -y apache2
