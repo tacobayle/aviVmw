@@ -13,7 +13,7 @@ output "backend" {
 }
 
 output "client" {
-  value = var.clientIpsMgt.*
+  value = vsphere_virtual_machine.client.*.default_ip_address
 }
 
 output "loadcommand" {
