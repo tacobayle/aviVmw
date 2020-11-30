@@ -5,7 +5,7 @@ resource "vsphere_tag" "ansible_group_mysql" {
 }
 
 data "template_file" "mysql_userdata" {
-  count = length(var.mysql.ipsCidrData)
+  count = length(var.mysql.ipsData)
   template = file("${path.module}/userdata/mysql.userdata")
   vars = {
     username     = var.mysql.username
@@ -22,7 +22,7 @@ data "vsphere_virtual_machine" "mysql" {
 }
 
 resource "vsphere_virtual_machine" "mysql" {
-  count = length(var.mysql.ipsCidrData)
+  count = length(var.mysql.ipsData)
   name             = "mysql-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id

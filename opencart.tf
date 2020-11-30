@@ -4,7 +4,7 @@ resource "vsphere_tag" "ansible_group_opencart" {
 }
 
 data "template_file" "opencart_userdata" {
-  count = length(var.opencart.ipsCidrData)
+  count = length(var.opencart.ipsData)
   template = file("${path.module}/userdata/opencart.userdata")
   vars = {
     username     = var.opencart.username
@@ -23,7 +23,7 @@ data "vsphere_virtual_machine" "opencart" {
 }
 
 resource "vsphere_virtual_machine" "opencart" {
-  count = length(var.opencart.ipsCidrData)
+  count = length(var.opencart.ipsData)
   name             = "opencart-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
