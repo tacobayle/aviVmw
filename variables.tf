@@ -69,7 +69,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.43"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.02"
+    aviConfigureTag = "v3.03"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -80,19 +80,17 @@ variable "ansible" {
 }
 
 variable "backend" {
-  type = map
   default = {
     cpu = 2
     memory = 4096
     disk = 20
-    password = "Avi_2020"
+    username = "ubuntu"
     network = "vxw-dvs-34-virtualwire-116-sid-6120115-wdc-06-vc12-avi-dev112"
-    wait_for_guest_net_routable = "false"
+    wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    defaultGwMgt = "10.206.112.1"
+    ipsData = ["100.64.129.203", "100.64.129.204"]
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    dnsMain = "10.206.8.130"
-    dnsSec = "10.206.8.131"
+    maskData = "/24"
   }
 }
 
@@ -138,16 +136,6 @@ variable "client" {
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
   }
-}
-
-variable "backendIpsMgt" {
-  type = list
-  default = ["10.206.112.120/22", "10.206.112.123/22"]
-}
-
-variable "opencartIps" {
-  type = list
-  default = ["100.64.129.201", "100.64.129.202"]
 }
 
 variable "domain" {

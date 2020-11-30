@@ -60,7 +60,7 @@ avi_applicationprofile:
     - name: &appProfile0 applicationProfileOpencart
 
 avi_servers:
-${yamlencode(vsphere_virtual_machine.backend.*.guest_ip_addresses)}
+${yamlencode(var.backend.ipsData)}
 
 avi_servers_open_cart:
 ${yamlencode(var.opencart.ipsData)}

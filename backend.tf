@@ -7,17 +7,14 @@ resource "vsphere_tag" "ansible_group_backend" {
 
 
 data "template_file" "backend_userdata" {
-  count = length(var.backendIpsMgt)
+  count = length(var.backend.ipsData)
   template = file("${path.module}/userdata/backend.userdata")
   vars = {
-    password     = var.backend["password"]
-    defaultGwMgt = var.backend["defaultGwMgt"]
+    username     = var.backend.username
     pubkey       = file(var.jump["public_key_path"])
-    cidrMgt      = element(var.backendIpsMgt, count.index)
-    ip = split("/", element(var.backendIpsMgt, count.index))[0]
     netplanFile  = var.backend["netplanFile"]
-    dnsMain      = var.backend["dnsMain"]
-    dnsSec       = var.backend["dnsSec"]
+    maskData = var.backend.maskData
+    ipData      = element(var.backend.ipsData, count.index)
   }
 }
 #
@@ -27,24 +24,24 @@ data "vsphere_virtual_machine" "backend" {
 }
 #
 resource "vsphere_virtual_machine" "backend" {
-  count            = length(var.backendIpsMgt)
+  count = length(var.backend.ipsData)
   name             = "backend-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   folder           = vsphere_folder.folder.path
 
   network_interface {
-                      network_id = data.vsphere_network.networkBackend.id
+    network_id = data.vsphere_network.networkMgt.id
   }
 
   network_interface {
-                      network_id = data.vsphere_network.networkMgt.id
+                      network_id = data.vsphere_network.networkBackend.id
   }
 
   num_cpus = var.backend["cpu"]
   memory = var.backend["memory"]
-  #wait_for_guest_net_timeout = var.backend["wait_for_guest_net_timeout"]
-  wait_for_guest_net_routable = var.backend["wait_for_guest_net_routable"]
+  wait_for_guest_net_timeout = var.backend["wait_for_guest_net_timeout"]
+  #wait_for_guest_net_routable = var.backend["wait_for_guest_net_routable"]
   guest_id = data.vsphere_virtual_machine.backend.guest_id
   scsi_type = data.vsphere_virtual_machine.backend.scsi_type
   scsi_bus_sharing = data.vsphere_virtual_machine.backend.scsi_bus_sharing
@@ -69,27 +66,16 @@ resource "vsphere_virtual_machine" "backend" {
         vsphere_tag.ansible_group_backend.id,
   ]
 
-    #customize {
-
-    #  network_interface {
-    #    ipv4_address = "10.0.0.10"
-    #    ipv4_netmask = 24
-    #  }
-    #  ipv4_gateway = "10.0.0.1"
-    #  dns_server_list = "8.8.8.8"
-    #}
-
   vapp {
     properties = {
      hostname    = "backend-${count.index}"
-     password    = var.backend["password"]
      public-keys = file(var.jump["public_key_path"])
      user-data   = base64encode(data.template_file.backend_userdata[count.index].rendered)
    }
  }
 
   connection {
-    host        = split("/", element(var.backendIpsMgt, count.index))[0]
+    host        = self.default_ip_address
     type        = "ssh"
     agent       = false
     user        = "ubuntu"
