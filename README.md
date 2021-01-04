@@ -18,6 +18,7 @@ TF_VAR_avi_user=admin
 - ubuntu-bionic-18.04-cloudimg-template
 - controller-20.1.1-9071-template
 ```
+- SSH key configured
 
 ## Environment:
 

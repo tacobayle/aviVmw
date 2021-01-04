@@ -27,7 +27,7 @@ variable "controller" {
     memory = 24768
     disk = 128
     count = "1"
-    version = "20.1.2-9171"
+    version = "20.1.3-9085"
     floatingIp = "10.41.134.130"
     wait_for_guest_net_timeout = 2
     private_key_path = "~/.ssh/cloudKey"
