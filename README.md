@@ -35,7 +35,7 @@ Terraform v0.12.29
 
 ### Avi version
 ```
-Avi 20.1.1 with one controller node
+Avi 20.1.3 with one controller node
 ```
 
 ### V-center version:
@@ -44,7 +44,7 @@ Avi 20.1.1 with one controller node
 ## Input/Parameters:
 1. All the paramaters/variables are stored in variables.tf
 
-## Use the the terraform script to:
+## Use the terraform plan to:
 - Create a new folder within v-center
 - Spin up n Avi Controller
 - Spin up n backend VM(s) - count based on the length of var.backend.ipsData - with two interfaces: dhcp for mgmt, static for data traffic
