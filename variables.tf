@@ -65,7 +65,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.43"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.24"
+    aviConfigureTag = "v3.27"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -164,6 +164,8 @@ variable "lsc" {
       vcpus_per_se = 2
       memory_per_se = 4096
       disk_per_se = 25
+      SE_INBAND_MGMT = "False"
+      DPDK = "False"
       count = 4
       networks = [
         {
