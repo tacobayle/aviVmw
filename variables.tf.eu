@@ -153,6 +153,13 @@ variable "avi_cloud" {
   }
 }
 
+variable "avi_cloud_lsc" {
+  type = map
+  default = {
+    name = "cloudLsc" # don't change this value
+  }
+}
+
 variable "avi_network_vip" {
   type = map
   default = {
