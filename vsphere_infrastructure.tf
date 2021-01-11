@@ -38,8 +38,8 @@ data "vsphere_network" "networkClient" {
 }
 
 data "vsphere_network" "networksLsc" {
-  count = length(var.serviceEngineGroupLsc.networks)
-  name = element(var.serviceEngineGroupLsc.networks, count.index).name
+  count = length(var.lsc.serviceEngineGroup.networks)
+  name = element(var.lsc.serviceEngineGroup.networks, count.index).name
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 

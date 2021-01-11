@@ -25,6 +25,7 @@ controller:
   tenant_access_to_provider_se: ${var.controller.tenant_access_to_provider_se}
   tenant_vrf: ${var.controller.tenant_vrf}
   aviCredsJsonFile: ${var.controller.aviCredsJsonFile}
+  private_key_path: ${var.controller.private_key_path}
 
 controllerPrivateIps:
 ${yamlencode(vsphere_virtual_machine.controller.*.default_ip_address)}
@@ -49,11 +50,6 @@ vmw:
     privilege: WRITE_ACCESS
     datacenter: ${var.vcenter.dc}
     management_network: "/api/vimgrnwruntime/?name=${var.avi_cloud.network}"
-
-lsc:
-  name: ${var.avi_cloud_lsc.name}
-  se_private_key: ${var.serviceEngineGroupLsc.private_key_path}
-  controller_private_key: ${var.controller.private_key_path}
 
 domain:
   name: ${var.domain.name}
@@ -130,7 +126,7 @@ EOF
 
   provisioner "file" {
     content = <<EOF
-{"serviceEngineGroup": ${jsonencode(var.serviceEngineGroup)}, "avi_virtualservice": ${jsonencode(var.avi_virtualservice)}, "avi_network_vip": ${jsonencode(var.avi_network_vip)}, "avi_network_backend": ${jsonencode(var.avi_network_backend)}}
+{"serviceEngineGroup": ${jsonencode(var.serviceEngineGroup)}, "avi_virtualservice": ${jsonencode(var.avi_virtualservice)}, "avi_network_vip": ${jsonencode(var.avi_network_vip)}, "avi_network_backend": ${jsonencode(var.avi_network_backend)}, "lsc": ${jsonencode(var.lsc)}}
 EOF
     destination = var.ansible.jsonFile
   }

@@ -5,20 +5,20 @@ resource "vsphere_tag" "ansible_group_se" {
 
 data "template_file" "se_userdata" {
   template = file("${path.module}/userdata/se.userdata")
-  count = var.serviceEngineGroupLsc.count
+  count = var.lsc.serviceEngineGroup.count
   vars = {
-    pubkey = file(var.serviceEngineGroupLsc.public_key_path)
-    username = var.serviceEngineGroupLsc.username
+    pubkey = file(var.lsc.serviceEngineGroup.public_key_path)
+    username = var.lsc.serviceEngineGroup.username
   }
 }
 
 data "vsphere_virtual_machine" "se" {
-  name          = var.serviceEngineGroupLsc.templateName
+  name          = var.lsc.serviceEngineGroup.templateName
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 resource "vsphere_virtual_machine" "se" {
-  count = var.serviceEngineGroupLsc.count
+  count = var.lsc.serviceEngineGroup.count
   name             = "seLsc-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
@@ -33,15 +33,15 @@ resource "vsphere_virtual_machine" "se" {
       }
     }
 
-  num_cpus = var.serviceEngineGroupLsc.vcpus_per_se
-  memory = var.serviceEngineGroupLsc.memory_per_se
+  num_cpus = var.lsc.serviceEngineGroup.vcpus_per_se
+  memory = var.lsc.serviceEngineGroup.memory_per_se
   guest_id = data.vsphere_virtual_machine.se.guest_id
   scsi_type = data.vsphere_virtual_machine.se.scsi_type
   scsi_bus_sharing = data.vsphere_virtual_machine.se.scsi_bus_sharing
   scsi_controller_count = data.vsphere_virtual_machine.se.scsi_controller_scan_count
 
   disk {
-    size             = var.serviceEngineGroupLsc.disk_per_se
+    size             = var.lsc.serviceEngineGroup.disk_per_se
     label            = "se-${count.index}.lab_vmdk"
     eagerly_scrub    = data.vsphere_virtual_machine.se.disks.0.eagerly_scrub
     thin_provisioned = data.vsphere_virtual_machine.se.disks.0.thin_provisioned
@@ -62,7 +62,7 @@ resource "vsphere_virtual_machine" "se" {
   vapp {
     properties = {
       hostname    = "se-${count.index}"
-      public-keys = file(var.serviceEngineGroupLsc.public_key_path)
+      public-keys = file(var.lsc.serviceEngineGroup.public_key_path)
       user-data   = base64encode(data.template_file.se_userdata[count.index].rendered)
     }
   }
@@ -71,8 +71,8 @@ resource "vsphere_virtual_machine" "se" {
     host        = self.default_ip_address
     type        = "ssh"
     agent       = false
-    user        = var.serviceEngineGroupLsc.username
-    private_key = file(var.serviceEngineGroupLsc.private_key_path)
+    user        = var.lsc.serviceEngineGroup.username
+    private_key = file(var.lsc.serviceEngineGroup.private_key_path)
   }
 
   provisioner "remote-exec" {
