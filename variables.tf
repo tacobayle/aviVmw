@@ -39,6 +39,7 @@ variable "controller" {
     tenant_access_to_provider_se = "true"
     tenant_vrf = "false"
     aviCredsJsonFile = "~/.avicreds.json"
+    public_key_path = "~/.ssh/cloudKey.pub"
   }
 }
 
@@ -64,7 +65,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.43"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.09"
+    aviConfigureTag = "v3.19"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -154,6 +155,13 @@ variable "avi_cloud" {
   }
 }
 
+variable "avi_cloud_lsc" {
+  type = map
+  default = {
+    name = "cloudLsc" # don't change this value
+  }
+}
+
 variable "avi_network_vip" {
   type = map
   default = {
@@ -187,7 +195,7 @@ variable "serviceEngineGroupLsc" {
       vcpus_per_se = 2
       memory_per_se = 4096
       disk_per_se = 25
-      count = 2
+      count = 4
       networks = [
         {
           name = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"

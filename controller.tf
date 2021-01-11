@@ -42,4 +42,10 @@ resource "vsphere_virtual_machine" "controller" {
         vsphere_tag.ansible_group_controller.id,
   ]
 
+  vapp {
+    properties = {
+      public-keys = file(var.controller.public_key_path)
+    }
+  }
+
 }

@@ -1,6 +1,5 @@
 resource "null_resource" "foo7" {
-  depends_on = [
-    vsphere_virtual_machine.jump]
+  depends_on = [vsphere_virtual_machine.jump]
   connection {
     host = vsphere_virtual_machine.jump.default_ip_address
     type = "ssh"
@@ -50,6 +49,11 @@ vmw:
     privilege: WRITE_ACCESS
     datacenter: ${var.vcenter.dc}
     management_network: "/api/vimgrnwruntime/?name=${var.avi_cloud.network}"
+
+lsc:
+  name: ${var.avi_cloud_lsc.name}
+  se_private_key: ${var.serviceEngineGroupLsc.private_key_path}
+  controller_private_key: ${var.controller.private_key_path}
 
 domain:
   name: ${var.domain.name}
