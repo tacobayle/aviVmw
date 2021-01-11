@@ -23,9 +23,5 @@ write_files:
     path: /opt/bootstrap.sh
     permissions: 0755
 
-  - content: |
-      ${username} ALL=(ALL) NOPASSWD:ALL
-    path: /etc/sudoers
-
 runcmd:
   - /opt/bootstrap.sh
