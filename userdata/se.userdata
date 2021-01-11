@@ -11,13 +11,21 @@ users:
 write_files:
   - content: |
       #!/bin/bash
+      # this command displays the last interfaces except the two first ones
+      for iface in `ip link | grep -v link | tail -n +3 | awk -F': ' '{print $2}'`
+      do
+      echo "" | sudo tee -a /etc/network/interfaces.d/50-cloud-init.cfg
+      echo "auto $iface" | sudo tee -a /etc/network/interfaces.d/50-cloud-init.cfg
+      echo "iface $iface inet dhcp" | sudo tee -a /etc/network/interfaces.d/50-cloud-init.cfg
+      done
+      sudo /etc/init.d/networking restart
       echo "cloud init done" | tee /tmp/cloudInitDone.log
     path: /opt/bootstrap.sh
     permissions: 0755
 
   - content: |
       ${username} ALL=(ALL) NOPASSWD:ALL
-    path: /etc/sudoers.d/ubuntu
+    path: /etc/sudoers
 
 runcmd:
   - /opt/bootstrap.sh

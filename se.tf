@@ -9,7 +9,6 @@ data "template_file" "se_userdata" {
   vars = {
     pubkey = file(var.serviceEngineGroupLsc.public_key_path)
     username = var.serviceEngineGroupLsc.username
-    networks = jsonencode(var.serviceEngineGroupLsc.networks)
   }
 }
 
@@ -23,7 +22,7 @@ resource "vsphere_virtual_machine" "se" {
   name             = "seLsc-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
-  folder           = vsphere_folder.folderSeLsc.path
+  folder           = vsphere_folder.folder.path
 
   dynamic network_interface {
     for_each = [for network in data.vsphere_network.networksLsc:{
