@@ -44,8 +44,7 @@ resource "vsphere_virtual_machine" "controller" {
 
   vapp {
     properties = {
-      public-keys = file(var.controller.public_key_path)
+      sysadmin-public-key = file(var.controller.public_key_path)
     }
   }
-
 }
