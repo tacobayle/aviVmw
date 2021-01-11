@@ -9,7 +9,7 @@ data "template_file" "se_userdata" {
   vars = {
     pubkey = file(var.serviceEngineGroupLsc.public_key_path)
     username = var.serviceEngineGroupLsc.username
-    networks = var.serviceEngineGroupLsc.networks
+    networks = jsonencode(var.serviceEngineGroupLsc.networks)
   }
 }
 
