@@ -191,7 +191,7 @@ variable "serviceEngineGroupLsc" {
           name = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
         },
         {
-          name = "vxw-dvs-34-virtualwire-118-sid-1080116-sof2-01-vc08-avi-dev114"
+          name = "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114"
         },
       ]
       username = "ubuntu"
