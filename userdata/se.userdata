@@ -11,6 +11,13 @@ users:
 write_files:
   - content: |
       #!/bin/bash
-      sudo tee /etc/sudoers > /dev/null <<EOT
-      ${username} ALL=(ALL) NOPASSWD: ALL
-      EOF
+      echo "cloud init done" | tee /tmp/cloudInitDone.log
+    path: /opt/bootstrap.sh
+    permissions: 0755
+
+  - content: |
+      ${username} ALL=(ALL) NOPASSWD:ALL
+    path: /etc/sudoers.d/ubuntu
+
+runcmd:
+  - /opt/bootstrap.sh

@@ -18,7 +18,7 @@ data "vsphere_virtual_machine" "se" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-resource "vsphere_virtual_machine" "backend" {
+resource "vsphere_virtual_machine" "se" {
   count = length(var.serviceEngineGroupLsc.count)
   name             = "seLsc-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
