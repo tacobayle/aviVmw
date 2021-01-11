@@ -1,10 +1,7 @@
-
-
 resource "vsphere_tag" "ansible_group_backend" {
   name             = "backend"
   category_id      = vsphere_tag_category.ansible_group_backend.id
 }
-
 
 data "template_file" "backend_userdata" {
   count = length(var.backend.ipsData)
@@ -17,12 +14,12 @@ data "template_file" "backend_userdata" {
     ipData      = element(var.backend.ipsData, count.index)
   }
 }
-#
+
 data "vsphere_virtual_machine" "backend" {
   name          = var.backend["template_name"]
   datacenter_id = data.vsphere_datacenter.dc.id
 }
-#
+
 resource "vsphere_virtual_machine" "backend" {
   count = length(var.backend.ipsData)
   name             = "backend-${count.index}"

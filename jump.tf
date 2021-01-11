@@ -3,11 +3,9 @@ resource "vsphere_tag" "ansible_group_jump" {
   category_id      = vsphere_tag_category.ansible_group_jump.id
 }
 
-
 data "template_file" "jumpbox_userdata" {
   template = file("${path.module}/userdata/jump.userdata")
   vars = {
-    password      = var.jump["password"]
     pubkey        = file(var.jump["public_key_path"])
     avisdkVersion = var.jump["avisdkVersion"]
     ansibleVersion = var.ansible["version"]
@@ -18,12 +16,12 @@ data "template_file" "jumpbox_userdata" {
     privateKey = var.jump["private_key_path"]
   }
 }
-#
+
 data "vsphere_virtual_machine" "jump" {
   name          = var.jump["template_name"]
   datacenter_id = data.vsphere_datacenter.dc.id
 }
-#
+
 resource "vsphere_virtual_machine" "jump" {
   name             = var.jump["name"]
   datastore_id     = data.vsphere_datastore.datastore.id
@@ -63,7 +61,6 @@ resource "vsphere_virtual_machine" "jump" {
   vapp {
     properties = {
      hostname    = "jump"
-     password    = var.jump["password"]
      public-keys = file(var.jump["public_key_path"])
      user-data   = base64encode(data.template_file.jumpbox_userdata.rendered)
    }
@@ -92,7 +89,4 @@ resource "vsphere_virtual_machine" "jump" {
   source      = var.ansible["directory"]
   destination = "~/ansible"
   }
-
-
-
 }

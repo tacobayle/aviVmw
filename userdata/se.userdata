@@ -1,0 +1,16 @@
+#cloud-config
+users:
+  - name: ${username}
+    lock_passwd: true
+    shell: /bin/bash
+    sudo:  ALL=(ALL) NOPASSWD:ALL
+    chpasswd: {expire: False}
+    ssh_authorized_keys:
+      - ${pubkey}
+
+write_files:
+  - content: |
+      #!/bin/bash
+      sudo tee /etc/sudoers > /dev/null <<EOT
+      ${username} ALL=(ALL) NOPASSWD: ALL
+      EOF

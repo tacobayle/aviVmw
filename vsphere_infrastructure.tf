@@ -37,8 +37,20 @@ data "vsphere_network" "networkClient" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
+data "vsphere_network" "networksLsc" {
+  count = length(var.serviceEngineGroupLsc.networks)
+  name = element(var.serviceEngineGroupLsc.networks, count.index).name
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
 resource "vsphere_folder" "folder" {
   path          = var.vcenter.folder
+  type          = "vm"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+resource "vsphere_folder" "folderSeLsc" {
+  path          = var.serviceEngineGroupLsc.folder
   type          = "vm"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
@@ -85,6 +97,14 @@ resource "vsphere_tag_category" "ansible_group_mysql" {
 
 resource "vsphere_tag_category" "ansible_group_opencart" {
   name = "ansible_group_opencart"
+  cardinality = "SINGLE"
+  associable_types = [
+    "VirtualMachine",
+  ]
+}
+
+resource "vsphere_tag_category" "ansible_group_se" {
+  name = "ansible_group_se"
   cardinality = "SINGLE"
   associable_types = [
     "VirtualMachine",
