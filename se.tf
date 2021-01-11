@@ -1,5 +1,5 @@
 resource "vsphere_tag" "ansible_group_se" {
-  name             = "se"
+  name             = "seLsc"
   category_id      = vsphere_tag_category.ansible_group_se.id
 }
 
