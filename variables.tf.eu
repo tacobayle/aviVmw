@@ -49,7 +49,6 @@ variable "jump" {
     cpu = 2
     memory = 4096
     disk = 20
-    password = "Avi_2020"
     public_key_path = "~/.ssh/cloudKey.pub"
     private_key_path = "~/.ssh/cloudKey"
     wait_for_guest_net_timeout = 2
@@ -176,6 +175,30 @@ variable "avi_network_backend" {
     dhcp_enabled = "yes"
     exclude_discovered_subnets = "true"
     vcenter_dvs = "true"
+  }
+}
+
+variable "serviceEngineGroupLsc" {
+  default = {
+      name = "Default-Group"
+      cloud_ref = "cloudLsc"
+      vcpus_per_se = 2
+      memory_per_se = 4096
+      disk_per_se = 25
+      count = 2
+      networks = [
+        {
+          name = "sof2-01-vc08-avi-dev113"
+        },
+        {
+          name = "sof2-01-vc08-avi-dev114"
+        },
+      ]
+      username = "ubuntu"
+      templateName = "ubuntu-xenial-16.04-cloudimg-template"
+      folder = "NicTfVmw"
+      public_key_path = "~/.ssh/cloudKey.pub"
+      private_key_path = "~/.ssh/cloudKey"
   }
 }
 
