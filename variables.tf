@@ -190,6 +190,9 @@ variable "serviceEngineGroupLsc" {
       count = 2
       networks = [
         {
+          name = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
+        },
+        {
           name = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
         },
         {
