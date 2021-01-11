@@ -35,7 +35,7 @@ variable "controller" {
     dns =  ["10.23.108.1", "10.23.108.2"]
     ntp = ["95.81.173.155", "188.165.236.162"]
     from_email = "avicontroller@avidemo.fr"
-    se_in_provider_context = "false"
+    se_in_provider_context = "true"
     tenant_access_to_provider_se = "true"
     tenant_vrf = "false"
     aviCredsJsonFile = "~/.avicreds.json"
