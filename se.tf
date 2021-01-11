@@ -5,7 +5,7 @@ resource "vsphere_tag" "ansible_group_se" {
 
 data "template_file" "se_userdata" {
   template = file("${path.module}/userdata/se.userdata")
-  count = length(var.serviceEngineGroupLsc.count)
+  count = var.serviceEngineGroupLsc.count
   vars = {
     pubkey = file(var.serviceEngineGroupLsc.public_key_path)
     username = var.serviceEngineGroupLsc.username
@@ -19,7 +19,7 @@ data "vsphere_virtual_machine" "se" {
 }
 
 resource "vsphere_virtual_machine" "se" {
-  count = length(var.serviceEngineGroupLsc.count)
+  count = var.serviceEngineGroupLsc.count
   name             = "seLsc-${count.index}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
