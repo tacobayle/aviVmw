@@ -35,7 +35,7 @@ variable "controller" {
     dns =  ["10.23.108.1", "10.23.108.2"]
     ntp = ["95.81.173.155", "188.165.236.162"]
     from_email = "avicontroller@avidemo.fr"
-    se_in_provider_context = "true"
+    se_in_provider_context = "true" # required by LSC Cloud
     tenant_access_to_provider_se = "true"
     tenant_vrf = "false"
     aviCredsJsonFile = "~/.avicreds.json"
@@ -65,7 +65,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.43"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.33"
+    aviConfigureTag = "v3.36"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -134,8 +134,6 @@ variable "client" {
   }
 }
 
-
-
 variable "domain" {
   type = map
   default = {
@@ -165,7 +163,7 @@ variable "lsc" {
       memory_per_se = 4096
       disk_per_se = 25
       SE_INBAND_MGMT = "False"
-      DPDK = "False"
+      DPDK = "Yes"
       count = 4
       networks = [
         {
