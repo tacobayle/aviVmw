@@ -11,6 +11,7 @@ users:
 write_files:
   - content: |
       #!/bin/bash
+      sudo apt install -y python
       # this command displays the last interfaces except the two first ones
       for iface in `ip link | grep -v link | tail -n +3 | awk -F': ' '{print $2}'`
       do
