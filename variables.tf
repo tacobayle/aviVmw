@@ -23,9 +23,9 @@ variable "vcenter" {
 
 variable "controller" {
   default = {
-    cpu = 8
-    memory = 24768
-    disk = 128
+    cpu = 16
+    memory = 32768
+    disk = 256
     count = "1"
     version = "20.1.3-9085"
     floatingIp = "10.41.134.130"
@@ -170,7 +170,7 @@ variable "lsc" {
       memory_per_se = 4096
       disk_per_se = 25
       SE_INBAND_MGMT = "False"
-      DPDK = "No"
+      DPDK = "Yes"
       count = 4
       networks = [
         {
