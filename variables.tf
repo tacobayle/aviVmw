@@ -166,7 +166,7 @@ variable "lsc" {
       name = "Default-Group"
       cloud_ref = "cloudLsc"
       vcpus_per_se = 2
-      kernel_version = "4.4.0-146-generic"
+      kernel_version = "4.4.0-72-generic"
       memory_per_se = 4096
       disk_per_se = 25
       SE_INBAND_MGMT = "False"

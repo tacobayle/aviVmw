@@ -24,10 +24,10 @@ write_files:
       echo "cloud init done" | tee /tmp/cloudInitDone.log
       sleep 20
       # upgrading or downgrading Linux kernel
-      # sudo apt-get remove -y -o Dpkg::Options::="--force-all" linux-image-$(uname -r)
-      # sudo apt-get install -y -o Dpkg::Options::="--force-all" linux-image-${kernelVersion}
-      # sudo update-grub
-      # sudo reboot
+      sudo apt-get remove -y -o Dpkg::Options::="--force-all" linux-image-$(uname -r)
+      sudo apt-get install -y -o Dpkg::Options::="--force-all" linux-image-${kernelVersion}
+      sudo update-grub
+      sudo reboot
     path: /opt/bootstrap.sh
     permissions: 0755
 

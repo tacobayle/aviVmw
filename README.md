@@ -15,8 +15,9 @@ TF_VAR_avi_user=admin
 ```
 - VM template configured in V-center:
 ```
+- ubuntu-xenial-16.04-cloudimg-template (which can be configured here: http://cloud-images-archive.ubuntu.com/releases/xenial/release-20180105/ubuntu-16.04-server-cloudimg-amd64.ova)
 - ubuntu-bionic-18.04-cloudimg-template
-- controller-20.1.1-9071-template
+- controller-20.1.3-9085-template
 ```
 - SSH key configured
 
@@ -27,10 +28,10 @@ Terraform Plan has/have been tested against:
 ### terraform
 
 ```
-Terraform v0.12.29
-+ provider.null v2.1.2
-+ provider.template v2.1.2
-+ provider.vsphere v1.15.0
+Terraform v0.13.5
++ provider registry.terraform.io/hashicorp/null v3.0.0
++ provider registry.terraform.io/hashicorp/template v2.2.0
++ provider registry.terraform.io/hashicorp/vsphere v1.24.3
 ```
 
 ### Avi version
