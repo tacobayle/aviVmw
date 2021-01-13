@@ -65,7 +65,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.43"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.45"
+    aviConfigureTag = "v3.46"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -166,6 +166,7 @@ variable "lsc" {
       name = "Default-Group"
       cloud_ref = "cloudLsc"
       vcpus_per_se = 2
+      kernel_version = "4.4.0-146-generic"
       memory_per_se = 4096
       disk_per_se = 25
       SE_INBAND_MGMT = "False"

@@ -9,6 +9,7 @@ data "template_file" "se_userdata" {
   vars = {
     pubkey = file(var.lsc.serviceEngineGroup.public_key_path)
     username = var.lsc.serviceEngineGroup.username
+    kernelVersion = var.lsc.serviceEngineGroup.kernel_version
   }
 }
 
