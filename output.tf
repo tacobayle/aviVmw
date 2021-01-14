@@ -8,8 +8,12 @@ output "controllers" {
   value = vsphere_virtual_machine.controller.*.default_ip_address
 }
 
-output "backend" {
-  value = vsphere_virtual_machine.backend.*.default_ip_address
+output "backend_lsc" {
+  value = vsphere_virtual_machine.backend_lsc.*.default_ip_address
+}
+
+output "backend_vmw" {
+  value = vsphere_virtual_machine.backend_vmw.*.default_ip_address
 }
 
 output "client" {
