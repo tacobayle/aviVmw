@@ -199,7 +199,7 @@ variable "lsc" {
       http = [
         {
           name = "app9-lsc"
-          pool_ref = "pool1"
+          pool_ref = "pool9-lsc"
           services: [
             {
               port = 80
