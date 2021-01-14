@@ -123,7 +123,7 @@ EOF
 
   provisioner "file" {
     content = <<EOF
-{"serviceEngineGroup": ${jsonencode(var.serviceEngineGroup)}, "avi_virtualservice": ${jsonencode(var.avi_virtualservice)}, "avi_network_vip": ${jsonencode(var.avi_network_vip)}, "avi_network_backend": ${jsonencode(var.avi_network_backend)}, "lsc": ${jsonencode(var.lsc)}, "seLsc": ${jsonencode(vsphere_virtual_machine.se.*.default_ip_address)}, "domain": ${jsonencode(domain)}}
+{"serviceEngineGroup": ${jsonencode(var.serviceEngineGroup)}, "avi_virtualservice": ${jsonencode(var.avi_virtualservice)}, "avi_network_vip": ${jsonencode(var.avi_network_vip)}, "avi_network_backend": ${jsonencode(var.avi_network_backend)}, "lsc": ${jsonencode(var.lsc)}, "seLsc": ${jsonencode(vsphere_virtual_machine.se.*.default_ip_address)}, "domain": ${jsonencode(var.domain)}}
 EOF
     destination = var.ansible.jsonFile
   }
