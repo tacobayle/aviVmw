@@ -65,7 +65,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.43"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.49"
+    aviConfigureTag = "v3.5"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -75,7 +75,7 @@ variable "ansible" {
   }
 }
 
-variable "backend" {
+variable "backend_vmw" {
   default = {
     cpu = 2
     memory = 4096
@@ -85,6 +85,21 @@ variable "backend" {
     wait_for_guest_net_timeout = 2
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     ipsData = ["100.64.130.203", "100.64.130.204"]
+    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+    maskData = "/24"
+  }
+}
+
+variable "backend_lsc" {
+  default = {
+    cpu = 2
+    memory = 4096
+    disk = 20
+    username = "ubuntu"
+    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+    wait_for_guest_net_timeout = 2
+    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+    ipsData = ["100.64.130.205", "100.64.130.206"]
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
     maskData = "/24"
   }

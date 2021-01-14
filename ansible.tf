@@ -57,7 +57,10 @@ avi_applicationprofile:
 
 # don't change the above variable name
 avi_servers:
-${yamlencode(var.backend.ipsData)}
+${yamlencode(var.backend_vmw.ipsData)}
+
+avi_servers_lsc:
+${yamlencode(var.backend_lsc.ipsData)}
 
 avi_servers_open_cart:
 ${yamlencode(var.opencart.ipsData)}
