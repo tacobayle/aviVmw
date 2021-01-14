@@ -65,7 +65,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.43"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.47"
+    aviConfigureTag = "v3.48"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -158,6 +158,7 @@ variable "lsc" {
     name = "cloudLsc"
     # don't change this value
     network_vip = {
+      name = "net-lsc-vip"
       ipStartPool = "100"
       ipEndPool = "110"
       cidr = "100.64.131.0/24"
