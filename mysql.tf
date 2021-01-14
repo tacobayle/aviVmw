@@ -33,7 +33,7 @@ resource "vsphere_virtual_machine" "mysql" {
   }
 
   network_interface {
-                      network_id = data.vsphere_network.networkBackend.id
+                      network_id = data.vsphere_network.networkBackendMysql
   }
 
   num_cpus = var.mysql["cpu"]

@@ -32,8 +32,18 @@ data "vsphere_network" "networkBackendVmw" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_network" "networkBackendLscw" {
+data "vsphere_network" "networkBackendLsc" {
   name = var.backend_lsc["network"]
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_network" "networkBackendMysql" {
+  name = var.mysql.network
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_network" "networkBackendOpencart" {
+  name = var.opencart.network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 

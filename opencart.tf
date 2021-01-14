@@ -34,7 +34,7 @@ resource "vsphere_virtual_machine" "opencart" {
   }
 
   network_interface {
-                      network_id = data.vsphere_network.networkBackend.id
+                      network_id = data.vsphere_network.networkBackendOpencart.id
   }
 
 

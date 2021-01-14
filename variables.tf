@@ -117,6 +117,7 @@ variable "opencart" {
     ipsData = ["100.64.130.201", "100.64.130.202"]
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
     maskData = "/24"
+    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
   }
 }
 
@@ -131,7 +132,8 @@ variable "mysql" {
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
     ipsData = ["100.64.130.200"]
     maskData = "/24"
-  }
+    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+     }
 }
 
 variable "client" {
