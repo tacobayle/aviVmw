@@ -65,7 +65,7 @@ resource "vsphere_folder" "folder" {
 }
 
 resource "vsphere_tag_category" "ansible_group_backend_lsc" {
-  name = "ansible_group_backend"
+  name = "ansible_group_backend_lsc"
   cardinality = "SINGLE"
   associable_types = [
     "VirtualMachine",
@@ -73,7 +73,7 @@ resource "vsphere_tag_category" "ansible_group_backend_lsc" {
 }
 
 resource "vsphere_tag_category" "ansible_group_backend_vmw" {
-  name = "ansible_group_backend"
+  name = "ansible_group_backend_vmw"
   cardinality = "SINGLE"
   associable_types = [
     "VirtualMachine",
