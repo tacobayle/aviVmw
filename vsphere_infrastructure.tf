@@ -27,8 +27,13 @@ data "vsphere_network" "networkAviMgt" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_network" "networkBackend" {
-  name = var.backend["network"]
+data "vsphere_network" "networkBackendVmw" {
+  name = var.backend_vmw["network"]
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_network" "networkBackendLscw" {
+  name = var.backend_lsc["network"]
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 

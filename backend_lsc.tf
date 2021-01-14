@@ -32,7 +32,7 @@ resource "vsphere_virtual_machine" "backend_lsc" {
   }
 
   network_interface {
-                      network_id = data.vsphere_network.networkBackend.id
+                      network_id = data.vsphere_network.networksLsc.id
   }
 
   num_cpus = var.backend_lsc["cpu"]
