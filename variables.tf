@@ -65,7 +65,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.43"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.46"
+    aviConfigureTag = "v3.47"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -155,7 +155,8 @@ variable "avi_cloud" {
 
 variable "lsc" {
   default = {
-    name = "cloudLsc" # don't change this value
+    name = "cloudLsc"
+    # don't change this value
     network_vip = {
       ipStartPool = "100"
       ipEndPool = "110"
@@ -188,6 +189,38 @@ variable "lsc" {
       folder = "NicTfVmw"
       public_key_path = "~/.ssh/cloudKey.pub"
       private_key_path = "~/.ssh/cloudKey"
+    }
+    pool = {
+        name = "pool9-lsc"
+        lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
+    },
+    virtualservices = {
+      http = [
+        {
+          name = "app9-lsc"
+          pool_ref = "pool1"
+          services: [
+            {
+              port = 80
+              enable_ssl = "false"
+            },
+            {
+              port = 443
+              enable_ssl = "true"
+            }
+          ]
+        }
+      ]
+      dns = [
+        {
+          name = "app3-dns"
+          services: [
+            {
+              port = 53
+            }
+          ]
+        }
+      ]
     }
   }
 }

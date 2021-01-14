@@ -51,13 +51,11 @@ vmw:
     datacenter: ${var.vcenter.dc}
     management_network: "/api/vimgrnwruntime/?name=${var.avi_cloud.network}"
 
-domain:
-  name: ${var.domain.name}
-
 avi_applicationprofile:
   http:
     - name: &appProfile0 applicationProfileOpencart
 
+# don't change the above variable name
 avi_servers:
 ${yamlencode(var.backend.ipsData)}
 
@@ -125,7 +123,7 @@ EOF
 
   provisioner "file" {
     content = <<EOF
-{"serviceEngineGroup": ${jsonencode(var.serviceEngineGroup)}, "avi_virtualservice": ${jsonencode(var.avi_virtualservice)}, "avi_network_vip": ${jsonencode(var.avi_network_vip)}, "avi_network_backend": ${jsonencode(var.avi_network_backend)}, "lsc": ${jsonencode(var.lsc)}, "seLsc": ${jsonencode(vsphere_virtual_machine.se.*.default_ip_address)}}
+{"serviceEngineGroup": ${jsonencode(var.serviceEngineGroup)}, "avi_virtualservice": ${jsonencode(var.avi_virtualservice)}, "avi_network_vip": ${jsonencode(var.avi_network_vip)}, "avi_network_backend": ${jsonencode(var.avi_network_backend)}, "lsc": ${jsonencode(var.lsc)}, "seLsc": ${jsonencode(vsphere_virtual_machine.se.*.default_ip_address)}, "domain": ${jsonencode(domain)}}
 EOF
     destination = var.ansible.jsonFile
   }
