@@ -29,7 +29,7 @@ variable "controller" {
     count = "1"
     version = "20.1.3-9085"
     floatingIp = "10.41.134.130"
-    wait_for_guest_net_timeout = 2
+    wait_for_guest_net_timeout = 4
     private_key_path = "~/.ssh/cloudKey"
     environment = "VMWARE"
     dns =  ["10.23.108.1", "10.23.108.2"]
