@@ -54,7 +54,15 @@ resource "vsphere_folder" "folder" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-resource "vsphere_tag_category" "ansible_group_backend" {
+resource "vsphere_tag_category" "ansible_group_backend_lsc" {
+  name = "ansible_group_backend"
+  cardinality = "SINGLE"
+  associable_types = [
+    "VirtualMachine",
+  ]
+}
+
+resource "vsphere_tag_category" "ansible_group_backend_vmw" {
   name = "ansible_group_backend"
   cardinality = "SINGLE"
   associable_types = [

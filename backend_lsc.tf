@@ -1,6 +1,6 @@
 resource "vsphere_tag" "ansible_group_backend" {
-  name             = "backend"
-  category_id      = vsphere_tag_category.ansible_group_backend.id
+  name             = "backend_lsc"
+  category_id      = vsphere_tag_category.ansible_group_backend_lsc.id
 }
 
 data "template_file" "backend_lsc_userdata" {
