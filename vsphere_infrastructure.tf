@@ -22,11 +22,6 @@ data "vsphere_network" "networkMgt" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_network" "networkAviMgt" {
-  name = var.avi_cloud["network"]
-  datacenter_id = data.vsphere_datacenter.dc.id
-}
-
 data "vsphere_network" "networkBackendVmw" {
   name = var.backend_vmw["network"]
   datacenter_id = data.vsphere_datacenter.dc.id
