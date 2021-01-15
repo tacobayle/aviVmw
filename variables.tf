@@ -164,7 +164,7 @@ variable "master" {
     cpu = 4
     memory = 8192
     disk = 50
-    network = "vxw-dvs-34-virtualwire-116-sid-6120115-wdc-06-vc12-avi-dev112"
+    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev120"
     wait_for_guest_net_routable = "false"
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
@@ -178,7 +178,7 @@ variable "worker" {
     cpu = 2
     memory = 4096
     disk = 20
-    network = "vxw-dvs-34-virtualwire-116-sid-6120115-wdc-06-vc12-avi-dev112"
+    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev120"
     wait_for_guest_net_routable = "false"
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
