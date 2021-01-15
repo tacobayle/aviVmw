@@ -174,7 +174,7 @@ variable "master" {
 variable "worker" {
   type = map
   default = {
-    count = 3
+    count = 2
     cpu = 2
     memory = 4096
     disk = 20
@@ -394,7 +394,7 @@ variable "lsc" {
       disk_per_se = 25
       SE_INBAND_MGMT = "False"
       DPDK = "Yes"
-      count = 4
+      count = 2
       networks = [
         {
           name = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
