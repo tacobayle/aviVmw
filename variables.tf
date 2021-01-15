@@ -75,6 +75,9 @@ variable "ansible" {
     directory = "ansible"
     jsonFile = "~/fromTf.json"
     yamlFile = "~/fromTf.yml"
+    k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
+    k8sInstallTag = "v1.31"
+    k8sJsonFile = "~/fromTerraformForKubernetes.json"
   }
 }
 
@@ -152,6 +155,58 @@ variable "client" {
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
   }
+}
+
+variable "master" {
+  type = map
+  default = {
+    count = 1
+    cpu = 4
+    memory = 8192
+    disk = 50
+    network = "vxw-dvs-34-virtualwire-116-sid-6120115-wdc-06-vc12-avi-dev112"
+    wait_for_guest_net_routable = "false"
+    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+  }
+}
+
+variable "worker" {
+  type = map
+  default = {
+    count = 3
+    cpu = 2
+    memory = 4096
+    disk = 20
+    network = "vxw-dvs-34-virtualwire-116-sid-6120115-wdc-06-vc12-avi-dev112"
+    wait_for_guest_net_routable = "false"
+    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+  }
+}
+
+variable "kubernetes" {
+  type = map
+  default = {
+    domain = "ako.avidemo.fr"
+    ifApi = "ens224"
+    dockerUser = "ubuntu"
+    dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
+    podNetworkCidr = "10.244.0.0/16"
+    cniUrl = "https://docs.projectcalico.org/manifests/calico.yaml"
+    version = "1.18.2-00"
+    networkPrefix = "/24"
+  }
+}
+
+variable "deploymentUrls" {
+  type = list
+  default = ["https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml", "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml", "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV3.yml"]
+}
+
+variable "nfsShares" {
+  type = list
+  default = ["nfs-opencart", "nfs-mariadb"]
 }
 
 variable "domain" {

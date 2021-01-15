@@ -22,6 +22,16 @@ data "vsphere_network" "networkMgt" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
+data "vsphere_network" "networkMaster" {
+  name = var.master.network
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_network" "networkWorker" {
+  name = var.worker.network
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
 data "vsphere_network" "networkBackendVmw" {
   name = var.backend_vmw["network"]
   datacenter_id = data.vsphere_datacenter.dc.id
@@ -117,6 +127,22 @@ resource "vsphere_tag_category" "ansible_group_opencart" {
 
 resource "vsphere_tag_category" "ansible_group_se" {
   name = "ansible_group_se"
+  cardinality = "SINGLE"
+  associable_types = [
+    "VirtualMachine",
+  ]
+}
+
+resource "vsphere_tag_category" "ansible_group_master" {
+  name = "ansible_group_master"
+  cardinality = "SINGLE"
+  associable_types = [
+    "VirtualMachine",
+  ]
+}
+
+resource "vsphere_tag_category" "ansible_group_worker" {
+  name = "ansible_group_worker"
   cardinality = "SINGLE"
   associable_types = [
     "VirtualMachine",

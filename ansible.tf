@@ -9,6 +9,13 @@ resource "null_resource" "foo7" {
   }
 
   provisioner "file" {
+    content      = <<EOF
+{"deploymentUrls": ${jsonencode(var.deploymentUrls)}, "nfsShares": ${jsonencode(var.nfsShares)}, "kubernetesMasterIpCidr": "${vsphere_virtual_machine.master[0].guest_ip_addresses[2]}${var.kubernetes["networkPrefix"]}", "kubernetes": ${jsonencode(var.kubernetes)}}
+EOF
+    destination = var.ansible.k8sJsonFile
+  }
+
+  provisioner "file" {
     content = <<EOF
 ---
 mysql_db_hostname: ${var.mysql.ipsData[0]}
@@ -110,6 +117,7 @@ EOF
   provisioner "remote-exec" {
     inline = [
       "chmod 600 ~/.ssh/${basename(var.jump.private_key_path)}",
+      "cd ~/ansible ; git clone ${var.ansible["k8sInstallUrl"]} --branch ${var.ansible["k8sInstallTag"]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml ansibleK8sInstall/main.yml --extra-vars @${var.ansible.k8sJsonFile}",
       "cd ~/ansible ; git clone ${var.ansible.opencartInstallUrl} --branch ${var.ansible.opencartInstallTag} ; cd ${split("/", var.ansible.opencartInstallUrl)[4]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml local.yml --extra-vars @${var.ansible.jsonFile} --extra-vars @${var.ansible.yamlFile}",
       "cd ~/ansible ; git clone ${var.ansible.aviConfigureUrl} --branch ${var.ansible.aviConfigureTag} ; cd ${split("/", var.ansible.aviConfigureUrl)[4]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml local.yml --extra-vars @${var.ansible.jsonFile} --extra-vars @${var.ansible.yamlFile}",
     ]
