@@ -6,6 +6,9 @@ variable "vsphere_password" {}
 variable "vsphere_server" {}
 variable "avi_password" {}
 variable "avi_user" {}
+variable "avi_vsphere_user" {}
+variable "avi_vsphere_password" {}
+variable "avi_vsphere_server" {}
 #
 # Other Variables
 #
@@ -65,7 +68,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.43"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.5"
+    aviConfigureTag = "v3.51"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
@@ -158,22 +161,168 @@ variable "domain" {
   }
 }
 
-variable "avi_cloud" {
-  type = map
+variable "vmw" {
   default = {
-    name = "cloudVmw" # don't change this value
-    network = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
+    name = "cloudVmw"
+    datacenter = "sof2-01-vc08"
     dhcp_enabled = "true"
-    networkDhcpEnabled = "true"
-    networkExcludeDiscoveredSubnets = "true"
-    networkVcenterDvs= "true"
+    management_network = {
+      name = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
+      dhcp_enabled = "true"
+      exclude_discovered_subnets = "true"
+      vcenter_dvs = "true"
+    }
+    network_vip = {
+      name = "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114"
+      ipStartPool = "50"
+      ipEndPool = "99"
+      cidr = "100.64.131.0/24"
+      type = "V4"
+      exclude_discovered_subnets = "true"
+      vcenter_dvs = "true"
+      dhcp_enabled = "no"
+    }
+    network_backend = {
+      name = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+      cidr = "100.64.130.0/24"
+      type = "V4"
+      exclude_discovered_subnets = "true"
+      vcenter_dvs = "true"
+      dhcp_enabled = "yes"
+    }
+    serviceEngineGroup = [
+      {
+        name = "Default-Group"
+        ha_mode = "HA_MODE_SHARED"
+        min_scaleout_per_vs = 2
+        buffer_se = 1
+        extra_shared_config_memory = 0
+        vcenter_folder = "NicTfVmw"
+        vcpus_per_se = 2
+        memory_per_se = 4096
+        disk_per_se = 25
+        realtime_se_metrics = {
+          enabled = true
+          duration = 0
+        }
+      },
+      {
+        name = "seGroupCpuAutoScale"
+        ha_mode = "HA_MODE_SHARED"
+        min_scaleout_per_vs = 1
+        buffer_se = 2
+        extra_shared_config_memory = 0
+        vcenter_folder = "NicTfVmw"
+        vcpus_per_se = 1
+        memory_per_se = 2048
+        disk_per_se = 25
+        auto_rebalance = true
+        auto_rebalance_interval = 30
+        auto_rebalance_criteria = [
+          "SE_AUTO_REBALANCE_CPU"
+        ]
+        realtime_se_metrics = {
+          enabled = true
+          duration = 0
+        }
+      },
+      {
+        name = "seGroupGslb"
+        ha_mode = "HA_MODE_SHARED"
+        min_scaleout_per_vs = 1
+        buffer_se = 0
+        extra_shared_config_memory = 2000
+        vcenter_folder = "NicTfVmw"
+        vcpus_per_se = 2
+        memory_per_se = 8192
+        disk_per_se = 25
+        realtime_se_metrics = {
+          enabled = true
+          duration = 0
+        }
+      }
+    ]
+    pool = {
+      name = "pool1-vmw"
+      lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
+    }
+    pool_opencart = {
+      name = "pool-opencart-vmw"
+      lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
+      application_persistence_profile_ref = "System-Persistence-Client-IP"
+    }
+    virtualservices = {
+      http = [
+        {
+          name = "app1"
+          pool_ref = "pool1-vmw"
+          services: [
+            {
+              port = 80
+              enable_ssl = "false"
+            },
+            {
+              port = 443
+              enable_ssl = "true"
+            }
+          ]
+        },
+        {
+          name = "app2-se-cpu-auto-scale"
+          pool_ref = "pool1-vmw"
+          services: [
+            {
+              port = 80
+              enable_ssl = "false"
+            },
+            {
+              port = 443
+              enable_ssl = "true"
+            }
+          ]
+          se_group_ref: "seGroupCpuAutoScale"
+        },
+        {
+          name = "opencart"
+          pool_ref = "pool-opencart-vmw"
+          services: [
+            {
+              port = 80
+              enable_ssl = "false"
+            },
+            {
+              port = 443
+              enable_ssl = "true"
+            }
+          ]
+        }
+      ]
+      dns = [
+        {
+          name = "app3-dns"
+          services: [
+            {
+              port = 53
+            }
+          ]
+        },
+        {
+          name = "app4-gslb"
+          services: [
+            {
+              port = 53
+            }
+          ]
+          se_group_ref: "seGroupGslb"
+        }
+      ]
+    }
   }
 }
 
 variable "lsc" {
   default = {
     name = "cloudLsc"
-    # don't change this value
     network_vip = {
       name = "net-lsc-vip"
       ipStartPool = "100"
@@ -211,7 +360,7 @@ variable "lsc" {
     pool = {
         name = "pool9-lsc"
         lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
-    },
+    }
     virtualservices = {
       http = [
         {
@@ -240,181 +389,6 @@ variable "lsc" {
         }
       ]
     }
-  }
-}
-
-variable "avi_network_vip" {
-  type = map
-  default = {
-    name = "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114"
-    cidr = "100.64.131.0/24"
-    begin = "50"
-    end = "99"
-    type = "V4"
-    exclude_discovered_subnets = "true"
-    vcenter_dvs = "true"
-    dhcp_enabled = "no"
-  }
-}
-
-variable "avi_network_backend" {
-  type = map
-  default = {
-    name = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-    cidr = "100.64.130.0/24"
-    type = "V4"
-    dhcp_enabled = "yes"
-    exclude_discovered_subnets = "true"
-    vcenter_dvs = "true"
-  }
-}
-
-variable "serviceEngineGroup" {
-  default = [
-    {
-      name = "Default-Group"
-      cloud_ref = "cloudVmw"
-      ha_mode = "HA_MODE_SHARED"
-      min_scaleout_per_vs = 2
-      buffer_se = 1
-      extra_shared_config_memory = 0
-      vcenter_folder = "NicTfVmw"
-      vcpus_per_se = 2
-      memory_per_se = 4096
-      disk_per_se = 25
-      realtime_se_metrics = {
-        enabled = true
-        duration = 0
-      }
-    },
-    {
-      name = "seGroupCpuAutoScale"
-      cloud_ref = "cloudVmw"
-      ha_mode = "HA_MODE_SHARED"
-      min_scaleout_per_vs = 1
-      buffer_se = 2
-      extra_shared_config_memory = 0
-      vcenter_folder = "NicTfVmw"
-      vcpus_per_se = 1
-      memory_per_se = 2048
-      disk_per_se = 25
-      auto_rebalance = true
-      auto_rebalance_interval = 30
-      auto_rebalance_criteria = [
-        "SE_AUTO_REBALANCE_CPU"
-              ]
-      realtime_se_metrics = {
-        enabled = true
-        duration = 0
-      }
-    },
-    {
-      name = "seGroupGslb"
-      cloud_ref = "cloudVmw"
-      ha_mode = "HA_MODE_SHARED"
-      min_scaleout_per_vs = 1
-      buffer_se = 0
-      extra_shared_config_memory = 2000
-      vcenter_folder = "NicTfVmw"
-      vcpus_per_se = 2
-      memory_per_se = 8192
-      disk_per_se = 25
-      realtime_se_metrics = {
-        enabled = true
-        duration = 0
-      }
-    }
-  ]
-}
-
-variable "avi_pool" {
-  type = map
-  default = {
-    name = "pool1"
-    lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
-  }
-}
-
-variable "avi_pool_opencart" {
-  type = map
-  default = {
-    name = "poolOpencart"
-    lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
-    application_persistence_profile_ref = "System-Persistence-Client-IP"
-  }
-}
-
-variable "avi_virtualservice" {
-  default = {
-    http = [
-      {
-        name = "app1"
-        pool_ref = "pool1"
-        cloud_ref = "cloudVmw"
-        services: [
-          {
-            port = 80
-            enable_ssl = "false"
-          },
-          {
-            port = 443
-            enable_ssl = "true"
-          }
-        ]
-      },
-      {
-        name = "app2-se-cpu-auto-scale"
-        pool_ref = "pool1"
-        cloud_ref = "cloudVmw"
-        services: [
-          {
-            port = 80
-            enable_ssl = "false"
-          },
-          {
-            port = 443
-            enable_ssl = "true"
-          }
-        ]
-        se_group_ref: "seGroupCpuAutoScale"
-      },
-      {
-        name = "opencart"
-        pool_ref = "poolOpencart"
-        cloud_ref = "cloudVmw"
-        services: [
-          {
-            port = 80
-            enable_ssl = "false"
-          },
-          {
-            port = 443
-            enable_ssl = "true"
-          }
-        ]
-      }
-    ]
-    dns = [
-      {
-        name = "app3-dns"
-        cloud_ref = "cloudVmw"
-        services: [
-          {
-            port = 53
-          }
-        ]
-      },
-      {
-        name = "app4-gslb"
-        cloud_ref = "cloudVmw"
-        services: [
-          {
-            port = 53
-          }
-        ]
-        se_group_ref: "seGroupGslb"
-      }
-    ]
   }
 }
 

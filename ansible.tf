@@ -36,45 +36,20 @@ ${yamlencode(var.controller.ntp.*)}
 dnsServers:
 ${yamlencode(var.controller.dns.*)}
 
-vmw:
-  name: &cloud0 ${var.avi_cloud.name}
-  network: ${var.avi_cloud.network}
-  networkDhcpEnabled: ${var.avi_cloud.networkDhcpEnabled}
-  networkExcludeDiscoveredSubnets: ${var.avi_cloud.networkExcludeDiscoveredSubnets}
-  networkVcenterDvs: ${var.avi_cloud.networkVcenterDvs}
-  dhcp_enabled: ${var.avi_cloud.dhcp_enabled}
-  vcenter_configuration:
-    username: ${var.vsphere_user}
-    password: ${var.vsphere_password}
-    vcenter_url: ${var.vsphere_server}
-    privilege: WRITE_ACCESS
-    datacenter: ${var.vcenter.dc}
-    management_network: "/api/vimgrnwruntime/?name=${var.avi_cloud.network}"
-
 avi_applicationprofile:
   http:
     - name: &appProfile0 applicationProfileOpencart
 
-# don't change the above variable name
-avi_servers:
+# don't change the variable names of the pools
+avi_servers_vmw:
 ${yamlencode(var.backend_vmw.ipsData)}
 
 avi_servers_lsc:
 ${yamlencode(var.backend_lsc.ipsData)}
 
-avi_servers_open_cart:
+avi_servers_opencart:
 ${yamlencode(var.opencart.ipsData)}
 
-avi_pool:
-  name: ${var.avi_pool.name}
-  lb_algorithm: ${var.avi_pool.lb_algorithm}
-  cloud_ref: ${var.avi_cloud.name}
-
-avi_pool_open_cart:
-  application_persistence_profile_ref: ${var.avi_pool_opencart.application_persistence_profile_ref}
-  name: ${var.avi_pool_opencart.name}
-  lb_algorithm: ${var.avi_pool_opencart.lb_algorithm}
-  cloud_ref: ${var.avi_cloud.name}
 
 avi_gslb:
   dns_configs:
@@ -126,7 +101,7 @@ EOF
 
   provisioner "file" {
     content = <<EOF
-{"serviceEngineGroup": ${jsonencode(var.serviceEngineGroup)}, "avi_virtualservice": ${jsonencode(var.avi_virtualservice)}, "avi_network_vip": ${jsonencode(var.avi_network_vip)}, "avi_network_backend": ${jsonencode(var.avi_network_backend)}, "lsc": ${jsonencode(var.lsc)}, "seLsc": ${jsonencode(vsphere_virtual_machine.se.*.default_ip_address)}, "domain": ${jsonencode(var.domain)}}
+{"avi_vsphere_user": ${jsonencode(var.avi_vsphere_user)}, "avi_vsphere_password": ${jsonencode(var.avi_vsphere_password)}, "avi_vsphere_server": ${jsonencode(var.avi_vsphere_server)}, "vmw": ${jsonencode(var.vmw)}, "lsc": ${jsonencode(var.lsc)}, "seLsc": ${jsonencode(vsphere_virtual_machine.se.*.default_ip_address)}, "domain": ${jsonencode(var.domain)}}
 EOF
     destination = var.ansible.jsonFile
   }
