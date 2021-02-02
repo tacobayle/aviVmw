@@ -1,5 +1,13 @@
 # Outputs for Terraform
 
+output "master" {
+  value = vsphere_virtual_machine.master.*.default_ip_address
+}
+
+output "workers" {
+  value = vsphere_virtual_machine.worker.*.default_ip_address
+}
+
 output "jump" {
   value = vsphere_virtual_machine.jump.default_ip_address
 }
