@@ -12,6 +12,8 @@ data "template_file" "master_userdata" {
   vars = {
     netplanFile  = var.master.netplanFile
     pubkey       = file(var.jump["public_key_path"])
+    dockerVersion = var.kubernetes.dockerVersion
+    username = var.master.username
   }
 }
 

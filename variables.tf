@@ -77,7 +77,7 @@ variable "ansible" {
     opencartInstallTag = "v1.19"
     directory = "ansible"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
-    k8sInstallTag = "v1.34"
+    k8sInstallTag = "v1.35"
   }
 }
 
@@ -168,6 +168,7 @@ variable "master" {
     wait_for_guest_net_routable = "false"
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
+    username = "ubuntu"
   }
 }
 
@@ -182,6 +183,7 @@ variable "worker" {
     wait_for_guest_net_routable = "false"
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
+    username = "ubuntu"
   }
 }
 

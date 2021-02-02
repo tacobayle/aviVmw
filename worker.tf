@@ -9,6 +9,8 @@ data "template_file" "worker_userdata" {
   vars = {
     netplanFile  = var.worker["netplanFile"]
     pubkey       = file(var.jump["public_key_path"])
+    dockerVersion = var.kubernetes.dockerVersion
+    username = var.worker.username
   }
 }
 
