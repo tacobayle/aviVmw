@@ -438,7 +438,6 @@ variable "lsc" {
       ]
       username = "ubuntu"
       templateName = "ubuntu-xenial-16.04-cloudimg-template"
-      folder = "NicTfVmw/SeLsc"
       public_key_path = "~/.ssh/cloudKey.pub"
       private_key_path = "~/.ssh/cloudKey"
     }
