@@ -69,6 +69,12 @@ resource "vsphere_folder" "folder" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
+resource "vsphere_folder" "folderSe" {
+  path          = var.lsc.serviceEngineGroup.folder
+  type          = "vm"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
 resource "vsphere_tag_category" "ansible_group_backend_lsc" {
   name = "ansible_group_backend_lsc"
   cardinality = "SINGLE"

@@ -5,10 +5,13 @@ variable "vsphere_user" {}
 variable "vsphere_password" {}
 variable "vsphere_server" {}
 variable "avi_password" {}
-variable "avi_user" {}
+variable "avi_username" {}
 variable "avi_vsphere_user" {}
 variable "avi_vsphere_password" {}
 variable "avi_vsphere_server" {}
+variable "docker_registry_username" {}
+variable "docker_registry_password" {}
+
 #
 # Other Variables
 #
@@ -66,18 +69,15 @@ variable "ansible" {
   type = map
   default = {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
-    aviPbAbsentTag = "v1.43"
+    aviPbAbsentTag = "v1.48"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v3.53"
+    aviConfigureTag = "v4.06"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.19"
     directory = "ansible"
-    jsonFile = "~/fromTf.json"
-    yamlFile = "~/fromTf.yml"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
-    k8sInstallTag = "v1.31"
-    k8sJsonFile = "~/fromTerraformForKubernetes.json"
+    k8sInstallTag = "v1.34"
   }
 }
 
@@ -174,7 +174,7 @@ variable "master" {
 variable "worker" {
   type = map
   default = {
-    count = 2
+    count = 3
     cpu = 2
     memory = 4096
     disk = 20
@@ -196,23 +196,45 @@ variable "kubernetes" {
     cniUrl = "https://docs.projectcalico.org/manifests/calico.yaml"
     version = "1.18.2-00"
     networkPrefix = "/24"
-  }
-}
-
-variable "deploymentUrls" {
-  type = list
-  default = ["https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml", "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml", "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV3.yml"]
-}
-
-variable "nfsShares" {
-  type = list
-  default = ["nfs-opencart", "nfs-mariadb"]
-}
-
-variable "domain" {
-  type = map
-  default = {
-    name = "vmw.avidemo.fr"
+    deployments = [
+      {
+        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
+      },
+      {
+        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
+      },
+      {
+        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV3.yml"
+      }
+    ]
+    nfs = [
+      {
+        name = "nfs-opencart"
+      },
+      {
+        name = "nfs-mariadb"
+      }
+    ]
+    services = [
+      {
+        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
+      },
+      {
+        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
+      },
+      {
+        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
+      },
+      {
+        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
+      },
+      {
+        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
+      },
+      {
+        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
+      }
+    ]
   }
 }
 
@@ -221,6 +243,11 @@ variable "vmw" {
     name = "cloudVmw"
     datacenter = "sof2-01-vc08"
     dhcp_enabled = "true"
+    domains = [
+      {
+        name = "vmw.avidemo.fr"
+      }
+    ]
     management_network = {
       name = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
       dhcp_enabled = "true"
@@ -252,7 +279,7 @@ variable "vmw" {
         min_scaleout_per_vs = 2
         buffer_se = 1
         extra_shared_config_memory = 0
-        vcenter_folder = "NicTfVmw"
+        vcenter_folder = "NicTfVmw/SeVmw"
         vcpus_per_se = 2
         memory_per_se = 4096
         disk_per_se = 25
@@ -267,7 +294,7 @@ variable "vmw" {
         min_scaleout_per_vs = 1
         buffer_se = 2
         extra_shared_config_memory = 0
-        vcenter_folder = "NicTfVmw"
+        vcenter_folder = "NicTfVmw/SeVmw"
         vcpus_per_se = 1
         memory_per_se = 2048
         disk_per_se = 25
@@ -287,7 +314,7 @@ variable "vmw" {
         min_scaleout_per_vs = 1
         buffer_se = 0
         extra_shared_config_memory = 2000
-        vcenter_folder = "NicTfVmw"
+        vcenter_folder = "NicTfVmw/SeVmw"
         vcpus_per_se = 2
         memory_per_se = 8192
         disk_per_se = 25
@@ -378,6 +405,11 @@ variable "vmw" {
 variable "lsc" {
   default = {
     name = "cloudLsc"
+    domains = [
+      {
+        name = "lsc.avidemo.fr"
+      }
+    ]
     network_vip = {
       name = "net-lsc-vip"
       ipStartPool = "100"
@@ -387,7 +419,6 @@ variable "lsc" {
     }
     serviceEngineGroup = {
       name = "Default-Group"
-      cloud_ref = "cloudLsc"
       vcpus_per_se = 2
       kernel_version = "4.4.0-72-generic"
       memory_per_se = 4096
@@ -408,7 +439,7 @@ variable "lsc" {
       ]
       username = "ubuntu"
       templateName = "ubuntu-xenial-16.04-cloudimg-template"
-      folder = "NicTfVmw"
+      folder = "NicTfVmw/SeLsc"
       public_key_path = "~/.ssh/cloudKey.pub"
       private_key_path = "~/.ssh/cloudKey"
     }
@@ -435,7 +466,7 @@ variable "lsc" {
       ]
       dns = [
         {
-          name = "app3-dns"
+          name = "app8-dns"
           services: [
             {
               port = 53
