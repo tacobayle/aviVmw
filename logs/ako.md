@@ -1,4 +1,5 @@
 https://medium.com/@kanrangsan/how-to-specify-internal-ip-for-kubernetes-worker-node-24790b2884fd
+https://networkinferno.net/trouble-with-the-kubernetes-node-ip
 
 ```
 helm repo add ako https://avinetworks.github.io/avi-helm-charts/charts/stable/ako

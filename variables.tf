@@ -71,7 +71,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.48"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v4.07"
+    aviConfigureTag = "v4.09"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.21"
@@ -195,7 +195,7 @@ variable "kubernetes" {
     dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
     podNetworkCidr = "10.244.0.0/16"
     cniUrl = "https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml" # calico: https://docs.projectcalico.org/manifests/calico.yaml
-    version = "1.18.2-00"
+    version = "1.19.7-00"
     networkPrefix = "/24"
     deployments = [
       {
