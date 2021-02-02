@@ -11,6 +11,8 @@ data "template_file" "worker_userdata" {
     pubkey       = file(var.jump["public_key_path"])
     dockerVersion = var.kubernetes.dockerVersion
     username = var.worker.username
+    docker_registry_username = var.docker_registry_username
+    docker_registry_password = var.docker_registry_password
   }
 }
 
