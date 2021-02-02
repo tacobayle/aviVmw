@@ -186,7 +186,6 @@ variable "worker" {
 }
 
 variable "kubernetes" {
-  type = map
   default = {
     domain = "ako.avidemo.fr"
     ifApi = "ens224"
