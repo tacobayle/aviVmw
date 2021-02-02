@@ -161,8 +161,8 @@ variable "master" {
   type = map
   default = {
     count = 1
-    cpu = 4
-    memory = 8192
+    cpu = 8
+    memory = 16384
     disk = 80
     network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
     wait_for_guest_net_routable = "false"
@@ -176,8 +176,8 @@ variable "worker" {
   type = map
   default = {
     count = 3
-    cpu = 2
-    memory = 4096
+    cpu = 4
+    memory = 8192
     disk = 40
     network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
     wait_for_guest_net_routable = "false"
@@ -194,8 +194,8 @@ variable "kubernetes" {
     dockerUser = "ubuntu"
     dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
     podNetworkCidr = "192.168.0.0/16"
-    cniUrl = "https://docs.projectcalico.org/manifests/calico.yaml" # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
-    version = "1.19.7-00"
+    cniUrl = "https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml" # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
+    version = "1.18.2-00"
     networkPrefix = "/24"
     deployments = [
       {
