@@ -1,5 +1,5 @@
 resource "null_resource" "foo7" {
-  depends_on = [vsphere_virtual_machine.jump]
+  depends_on = [vsphere_virtual_machine.jump, vsphere_virtual_machine.master, vsphere_virtual_machine.worker]
   connection {
     host = vsphere_virtual_machine.jump.default_ip_address
     type = "ssh"

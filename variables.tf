@@ -163,7 +163,7 @@ variable "master" {
     count = 1
     cpu = 4
     memory = 8192
-    disk = 50
+    disk = 80
     network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
     wait_for_guest_net_routable = "false"
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
@@ -178,7 +178,7 @@ variable "worker" {
     count = 3
     cpu = 2
     memory = 4096
-    disk = 20
+    disk = 40
     network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
     wait_for_guest_net_routable = "false"
     template_name = "ubuntu-bionic-18.04-cloudimg-template"
