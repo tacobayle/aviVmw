@@ -194,7 +194,7 @@ variable "kubernetes" {
     dockerUser = "ubuntu"
     dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
     podNetworkCidr = "10.244.0.0/16"
-    cniUrl = "https://docs.projectcalico.org/manifests/calico.yaml"
+    cniUrl = "https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml" # calico: https://docs.projectcalico.org/manifests/calico.yaml
     version = "1.18.2-00"
     networkPrefix = "/24"
     deployments = [
