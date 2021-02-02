@@ -77,7 +77,7 @@ variable "ansible" {
     opencartInstallTag = "v1.19"
     directory = "ansible"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
-    k8sInstallTag = "v1.35"
+    k8sInstallTag = "v1.37"
   }
 }
 
