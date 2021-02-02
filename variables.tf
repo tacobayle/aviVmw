@@ -77,7 +77,7 @@ variable "ansible" {
     opencartInstallTag = "v1.21"
     directory = "ansible"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
-    k8sInstallTag = "v1.39"
+    k8sInstallTag = "v1.4"
   }
 }
 
@@ -194,8 +194,8 @@ variable "kubernetes" {
     dockerUser = "ubuntu"
     dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
     podNetworkCidr = "10.244.0.0/16"
-    cniUrl = "https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml" # calico: https://docs.projectcalico.org/manifests/calico.yaml
-    version = "1.18.2-00"
+    cniUrl = "https://docs.projectcalico.org/manifests/calico.yaml" # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
+    version = "1.19.7-00"
     networkPrefix = "/24"
     deployments = [
       {
