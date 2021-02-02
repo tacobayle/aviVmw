@@ -31,7 +31,18 @@ write_files:
       echo "                macaddress: $ifaceLastMac" | sudo tee -a ${netplanFile}
       echo "            set-name: $ifaceLastName" | sudo tee -a ${netplanFile}
       echo "    version: 2" | sudo tee -a ${netplanFile}
-      sudo netplan apply
+      #sudo netplan apply
+      sleep 10
+      sudo apt-get update
+      sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+      sudo apt-get install -y docker-ce=${dockerVersion}
+      sudo usermod -a -G docker ${username}
+      su - ${username}
+      ping www.google.com -c 1
+      ping foo -c 1
+      while [ $? -ne 0 ] ; do docker login --username ${docker_registry_username} --password ${docker_registry_password} ; sleep 5 ; done
       echo "cloud init done" | tee /tmp/cloudInitDone.log
     path: /opt/bootstrap.sh
     permissions: 0755
