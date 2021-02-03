@@ -195,9 +195,9 @@ variable "kubernetes" {
     dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
     podNetworkCidr = "192.168.0.0/16"
     cniUrl = "https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml
-    # https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
-    # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
-    # Antrea: v0.9.1 # https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml
+//    # https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
+//    # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
+//    # Antrea: v0.9.1 # https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml
     version = "1.19.7-00"
     networkPrefix = "/24"
     deployments = [
