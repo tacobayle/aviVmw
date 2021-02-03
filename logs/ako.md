@@ -8,7 +8,7 @@ kubectl create secret docker-registry docker --docker-server=docker.io --docker-
 kubectl patch serviceaccount default -p "{\"imagePullSecrets\": [{\"name\": \"docker\"}]}" -n avi-system
 helm --debug install ako/ako --generate-name --version 1.3.1 -f values.yml --namespace=avi-system
 kubectl patch serviceaccount ako-sa -p "{\"imagePullSecrets\": [{\"name\": \"docker\"}]}" -n avi-system
-kubectl delete pod ako-0 - n avi-system
+kubectl delete pod ako-0 -n avi-system
 ```
 
 ```
