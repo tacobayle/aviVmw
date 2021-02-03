@@ -30,7 +30,7 @@ AKOSettings:
   deleteConfig: "false" # Has to be set to true in configmap if user wants to delete AKO created objects from AVI
   disableStaticRouteSync: "false" # If the POD networks are reachable from the Avi SE, set this knob to true.
   clusterName: "cluster1" # A unique identifier for the kubernetes cluster, that helps distinguish the objects for this cluster in the avi controller. // MUST-EDIT
-  cniPlugin: "calico" # Set the string if your CNI is calico or openshift. enum: calico|canal|flannel|openshift
+  cniPlugin: "flannel" # Set the string if your CNI is calico or openshift. enum: calico|canal|flannel|openshift
   #NamespaceSelector contains label key and value used for namespacemigration
   #Same label has to be present on namespace/s which needs migration/sync to AKO
   namespaceSelector:
