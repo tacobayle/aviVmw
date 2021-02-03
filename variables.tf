@@ -11,6 +11,7 @@ variable "avi_vsphere_password" {}
 variable "avi_vsphere_server" {}
 variable "docker_registry_username" {}
 variable "docker_registry_password" {}
+variable "docker_registry_email" {}
 
 #
 # Other Variables
@@ -71,13 +72,13 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.48"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v4.11"
+    aviConfigureTag = "v4.13"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.21"
     directory = "ansible"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
-    k8sInstallTag = "v1.43"
+    k8sInstallTag = "v1.48"
   }
 }
 
@@ -194,11 +195,11 @@ variable "kubernetes" {
     dockerUser = "ubuntu"
     dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
     podNetworkCidr = "192.168.0.0/16"
-    cniUrl = "https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml"
+    cniUrl = "https://docs.projectcalico.org/manifests/calico.yaml"
 //    # https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
 //    # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
 //    # Antrea: v0.9.1 # https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml
-    version = "1.19.7-00"
+    version = "1.18.2-00"
     networkPrefix = "/24"
     deployments = [
       {
