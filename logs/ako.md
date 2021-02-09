@@ -1,6 +1,19 @@
 https://medium.com/@kanrangsan/how-to-specify-internal-ip-for-kubernetes-worker-node-24790b2884fd
 https://networkinferno.net/trouble-with-the-kubernetes-node-ip
 
+
+
+```
+# for calico only
+ubuntu@master:~$ kubectl get blockaffinities
+NAME                          AGE
+master-192-168-219-64-26      24h
+worker-0-192-168-43-0-26      23h
+worker-1-192-168-226-64-26    23h
+worker-2-192-168-133-192-26   23h
+ubuntu@master:~$
+```
+
 ```
 helm repo add ako https://avinetworks.github.io/avi-helm-charts/charts/stable/ako
 kubectl apply -f namespace_avi-system.yml
@@ -47,9 +60,9 @@ NetworkSettings:
   #     cidrs:
   #       - 10.0.0.1/24
   #       - 11.0.0.1/24
-  subnetIP: "100.64.137.0" # Subnet IP of the vip network
+  subnetIP: "100.64.131.0" # Subnet IP of the vip network
   subnetPrefix: "24" # Subnet Prefix of the vip network
-  networkName: "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120" # Network Name of the vip network
+  networkName: "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114" # Network Name of the vip network
   enableRHI: false # This is a cluster wide setting for BGP peering.
 
 ### This section outlines all the knobs  used to control Layer 7 loadbalancing settings in AKO.
@@ -70,7 +83,7 @@ ControllerSettings:
   serviceEngineGroupName: "SeGroupAko1" # Name of the ServiceEngine Group.
   controllerVersion: "20.1.3" # The controller API version
   cloudName: "cloudVmw" # The configured cloud name on the Avi controller.
-  controllerHost: "10.41.135.79" # IP address or Hostname of Avi Controller
+  controllerHost: "10.41.135.101" # IP address or Hostname of Avi Controller
   tenantsPerCluster: "false" # If set to true, AKO will map each kubernetes cluster uniquely to a tenant in Avi
   tenantName: "admin" # Name of the tenant where all the AKO objects will be created in AVI. // Required only if tenantsPerCluster is set to True
 
