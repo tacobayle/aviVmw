@@ -39,10 +39,14 @@ write_files:
       sudo apt update
       sudo apt install -y docker.io
       sudo usermod -a -G docker ${username}
+      su - ${username}
+      ping www.google.com -c 1
+      ping foo -c 1
+      while [ $? -ne 0 ] ; do docker login --username ${docker_registry_username} --password ${docker_registry_password} ; sleep 5 ; done
       git clone ${url_demovip_server}
       cd $(basename ${url_demovip_server})
-      sudo docker build . --tag demovip_server:latest
-      sudo docker run -d -p ${ipData}:80:80 demovip_server:latest
+      docker build . --tag demovip_server:latest
+      docker run -d -p ${ipData}:80:80 demovip_server:latest
       echo "cloud init done" | tee /tmp/cloudInitDone.log
     path: /opt/bootstrap.sh
     permissions: 0755
