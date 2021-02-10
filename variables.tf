@@ -301,7 +301,7 @@ variable "vmw" {
         min_scaleout_per_vs = 2
         buffer_se = 1
         extra_shared_config_memory = 0
-        vcenter_folder = "NicTfVmw/SeVmw"
+        vcenter_folder = "NicTfVmw"
         vcpus_per_se = 2
         memory_per_se = 4096
         disk_per_se = 25
@@ -316,7 +316,7 @@ variable "vmw" {
         min_scaleout_per_vs = 1
         buffer_se = 2
         extra_shared_config_memory = 0
-        vcenter_folder = "NicTfVmw/SeVmw"
+        vcenter_folder = "NicTfVmw"
         vcpus_per_se = 1
         memory_per_se = 2048
         disk_per_se = 25
@@ -336,7 +336,7 @@ variable "vmw" {
         min_scaleout_per_vs = 1
         buffer_se = 0
         extra_shared_config_memory = 2000
-        vcenter_folder = "NicTfVmw/SeVmw"
+        vcenter_folder = "NicTfVmw"
         vcpus_per_se = 2
         memory_per_se = 8192
         disk_per_se = 25
