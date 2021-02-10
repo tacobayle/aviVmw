@@ -1,19 +1,12 @@
 #cloud-config
 users:
-  - default
-  - name: aviadmin
+  - name: ubuntu
     lock_passwd: true
     shell: /bin/bash
     sudo:  ALL=(ALL) NOPASSWD:ALL
     chpasswd: {expire: False}
     ssh_authorized_keys:
       - ${pubkey}
-
-chpasswd:
-  list: |
-    ubuntu: $password
-    aviadmin: $password
-  expire: False
 
 write_files:
   - content: |
@@ -44,13 +37,13 @@ write_files:
       sleep 20
       # apt config
       sudo apt update
-      sudo apt install -y apache2
-      sudo mv /var/www/html/index.html /var/www/html/index.html.old
-      ifaceFirstIp=`ip address show dev $ifaceFirstName | awk -F'inet ' '{print $2}' |  awk -F'/' '{print $1}'`
-      echo -e "Hello World - cloud is Vcenter - Node is $(hostname) - IP is $(ip address show dev $(ip -o link show | awk -F': ' '{print $2}' | tail -1) | awk -F'inet ' '{print $2}' |  awk -F'/' '{print $1}' | tr -d '\n')" | sudo tee /var/www/html/index.html
+      sudo apt install -y docker.io
+      sudo usermod -a -G docker ${username}
+      git clone ${url_demovip_server}
+      cd $(basename ${url_demovip_server})
+      sudo docker build . --tag demovip_server:latest
+      sudo docker run -d -p ${ipData}:80:80 demovip_server:latest
       echo "cloud init done" | tee /tmp/cloudInitDone.log
-      #while true ; do echo -e "HTTP/1.1 200 OK\n\nHello World - cloud is Vcenter/NSX-T - Node is $(hostname)" | sudo nc -N -l -p 80 ; done
-
     path: /opt/bootstrap.sh
     permissions: 0755
 

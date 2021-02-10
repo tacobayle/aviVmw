@@ -42,15 +42,20 @@ data "vsphere_network" "networkBackendLsc" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_network" "networkBackendMysql" {
-  name = var.mysql.network
+data "vsphere_network" "networkDemoVipServerVmw" {
+  name = var.demovip_server_vmw.network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_network" "networkBackendOpencart" {
-  name = var.opencart.network
-  datacenter_id = data.vsphere_datacenter.dc.id
-}
+//data "vsphere_network" "networkBackendMysql" {
+//  name = var.mysql.network
+//  datacenter_id = data.vsphere_datacenter.dc.id
+//}
+//
+//data "vsphere_network" "networkBackendOpencart" {
+//  name = var.opencart.network
+//  datacenter_id = data.vsphere_datacenter.dc.id
+//}
 
 data "vsphere_network" "networkClient" {
   name = var.client["network"]
@@ -85,6 +90,14 @@ resource "vsphere_tag_category" "ansible_group_backend_vmw" {
   ]
 }
 
+resource "vsphere_tag_category" "ansible_group_demovip_server_vmw" {
+  name = "ansible_group_demovip_server_vmw"
+  cardinality = "SINGLE"
+  associable_types = [
+    "VirtualMachine",
+  ]
+}
+
 resource "vsphere_tag_category" "ansible_group_client" {
   name = "ansible_group_client"
   cardinality = "SINGLE"
@@ -109,21 +122,21 @@ resource "vsphere_tag_category" "ansible_group_jump" {
   ]
 }
 
-resource "vsphere_tag_category" "ansible_group_mysql" {
-  name = "ansible_group_mysql"
-  cardinality = "SINGLE"
-  associable_types = [
-    "VirtualMachine",
-  ]
-}
-
-resource "vsphere_tag_category" "ansible_group_opencart" {
-  name = "ansible_group_opencart"
-  cardinality = "SINGLE"
-  associable_types = [
-    "VirtualMachine",
-  ]
-}
+//resource "vsphere_tag_category" "ansible_group_mysql" {
+//  name = "ansible_group_mysql"
+//  cardinality = "SINGLE"
+//  associable_types = [
+//    "VirtualMachine",
+//  ]
+//}
+//
+//resource "vsphere_tag_category" "ansible_group_opencart" {
+//  name = "ansible_group_opencart"
+//  cardinality = "SINGLE"
+//  associable_types = [
+//    "VirtualMachine",
+//  ]
+//}
 
 resource "vsphere_tag_category" "ansible_group_se" {
   name = "ansible_group_se"

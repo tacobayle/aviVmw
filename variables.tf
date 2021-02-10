@@ -97,6 +97,23 @@ variable "backend_vmw" {
   }
 }
 
+variable "demovip_server_vmw" {
+  default = {
+    cpu = 2
+    memory = 4096
+    disk = 20
+    username = "ubuntu"
+    wait_for_guest_net_timeout = 2
+    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+    ipsData = ["100.64.130.207", "100.64.130.208"]
+    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+    maskData = "/24"
+    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+    url_demovip_server = "https://github.com/tacobayle/demovip_server"
+  }
+}
+
 variable "backend_lsc" {
   default = {
     cpu = 2
@@ -112,36 +129,36 @@ variable "backend_lsc" {
   }
 }
 
-variable "opencart" {
-  default = {
-    cpu = 2
-    memory = 4096
-    disk = 20
-    username = "ubuntu"
-    wait_for_guest_net_timeout = 2
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    opencartDownloadUrl = "https://github.com/opencart/opencart/releases/download/3.0.3.5/opencart-3.0.3.5.zip"
-    ipsData = ["100.64.130.201", "100.64.130.202"]
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    maskData = "/24"
-    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-  }
-}
+//variable "opencart" {
+//  default = {
+//    cpu = 2
+//    memory = 4096
+//    disk = 20
+//    username = "ubuntu"
+//    wait_for_guest_net_timeout = 2
+//    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+//    opencartDownloadUrl = "https://github.com/opencart/opencart/releases/download/3.0.3.5/opencart-3.0.3.5.zip"
+//    ipsData = ["100.64.130.201", "100.64.130.202"]
+//    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+//    maskData = "/24"
+//    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+//  }
+//}
 
-variable "mysql" {
-  default = {
-    cpu = 2
-    memory = 4096
-    disk = 20
-    username = "ubuntu"
-    wait_for_guest_net_timeout = 2
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    ipsData = ["100.64.130.200"]
-    maskData = "/24"
-    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-     }
-}
+//variable "mysql" {
+//  default = {
+//    cpu = 2
+//    memory = 4096
+//    disk = 20
+//    username = "ubuntu"
+//    wait_for_guest_net_timeout = 2
+//    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+//    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+//    ipsData = ["100.64.130.200"]
+//    maskData = "/24"
+//    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+//     }
+//}
 
 variable "client" {
   type = map
