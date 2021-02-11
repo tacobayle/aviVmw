@@ -42,10 +42,10 @@ data "vsphere_network" "networkBackendLsc" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_network" "networkDemoVipServerVmw" {
-  name = var.demovip_server_vmw.network
-  datacenter_id = data.vsphere_datacenter.dc.id
-}
+//data "vsphere_network" "networkDemoVipServerVmw" {
+//  name = var.demovip_server_vmw.network
+//  datacenter_id = data.vsphere_datacenter.dc.id
+//}
 
 //data "vsphere_network" "networkBackendMysql" {
 //  name = var.mysql.network
