@@ -48,6 +48,16 @@ write_files:
       sudo mv /var/www/html/index.html /var/www/html/index.html.old
       ifaceFirstIp=`ip address show dev $ifaceFirstName | awk -F'inet ' '{print $2}' |  awk -F'/' '{print $1}'`
       echo -e "Hello World - cloud is Vcenter - Node is $(hostname) - IP is $(ip address show dev $(ip -o link show | awk -F': ' '{print $2}' | tail -1) | awk -F'inet ' '{print $2}' |  awk -F'/' '{print $1}' | tr -d '\n')" | sudo tee /var/www/html/index.html
+      sudo apt install -y docker.io
+      sudo usermod -a -G docker ${username}
+      su - ${username}
+      ping www.google.com -c 1
+      ping foo -c 1
+      while [ $? -ne 0 ] ; do docker login --username ${docker_registry_username} --password ${docker_registry_password} ; sleep 5 ; done
+      git clone ${url_demovip_server}
+      cd $(basename ${url_demovip_server})
+      docker build . --tag demovip_server:latest
+      docker run -d -p ${ipData}:8080:80 demovip_server:latest
       echo "cloud init done" | tee /tmp/cloudInitDone.log
       #while true ; do echo -e "HTTP/1.1 200 OK\n\nHello World - cloud is Vcenter/NSX-T - Node is $(hostname)" | sudo nc -N -l -p 80 ; done
 

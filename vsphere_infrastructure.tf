@@ -90,13 +90,13 @@ resource "vsphere_tag_category" "ansible_group_backend_vmw" {
   ]
 }
 
-resource "vsphere_tag_category" "ansible_group_demovip_server_vmw" {
-  name = "ansible_group_demovip_server_vmw"
-  cardinality = "SINGLE"
-  associable_types = [
-    "VirtualMachine",
-  ]
-}
+//resource "vsphere_tag_category" "ansible_group_demovip_server_vmw" {
+//  name = "ansible_group_demovip_server_vmw"
+//  cardinality = "SINGLE"
+//  associable_types = [
+//    "VirtualMachine",
+//  ]
+//}
 
 resource "vsphere_tag_category" "ansible_group_client" {
   name = "ansible_group_client"

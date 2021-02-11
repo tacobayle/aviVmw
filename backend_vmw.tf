@@ -12,6 +12,9 @@ data "template_file" "backend_vmw_userdata" {
     netplanFile  = var.backend_vmw["netplanFile"]
     maskData = var.backend_vmw.maskData
     ipData      = element(var.backend_vmw.ipsData, count.index)
+    url_demovip_server = var.backend_vmw.url_demovip_server
+    docker_registry_username = var.docker_registry_username
+    docker_registry_password = var.docker_registry_password
   }
 }
 

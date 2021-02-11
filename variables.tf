@@ -72,7 +72,7 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.48"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v4.13"
+    aviConfigureTag = "v4.16"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.21"
@@ -94,25 +94,26 @@ variable "backend_vmw" {
     ipsData = ["100.64.130.203", "100.64.130.204"]
     netplanFile = "/etc/netplan/50-cloud-init.yaml"
     maskData = "/24"
-  }
-}
-
-variable "demovip_server_vmw" {
-  default = {
-    cpu = 2
-    memory = 4096
-    disk = 20
-    username = "ubuntu"
-    wait_for_guest_net_timeout = 2
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-    ipsData = ["100.64.130.207", "100.64.130.208"]
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    maskData = "/24"
-    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
     url_demovip_server = "https://github.com/tacobayle/demovip_server"
   }
 }
+
+//variable "demovip_server_vmw" {
+//  default = {
+//    cpu = 2
+//    memory = 4096
+//    disk = 20
+//    username = "ubuntu"
+//    wait_for_guest_net_timeout = 2
+//    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+//    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+//    ipsData = ["100.64.130.207", "100.64.130.208"]
+//    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+//    maskData = "/24"
+//    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
+//    url_demovip_server = "https://github.com/tacobayle/demovip_server"
+//  }
+//}
 
 variable "backend_lsc" {
   default = {
@@ -346,20 +347,87 @@ variable "vmw" {
         }
       }
     ]
-    pool = {
-      name = "pool1-vmw"
-      lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
-    }
-    pool_opencart = {
-      name = "pool-opencart-vmw"
-      lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
-      application_persistence_profile_ref = "System-Persistence-Client-IP"
-    }
+    httppolicyset = [
+      {
+        name = "http-request-policy-app3-content-switching-vmw"
+        http_request_policy = {
+          rules = [
+            {
+              name = "Rule 1"
+              match = {
+                path = {
+                  match_criteria = "CONTAINS"
+                  match_str = ["hello", "world"]
+                }
+              }
+              rewrite_url_action = {
+                path = {
+                  type = "URI_PARAM_TYPE_TOKENIZED"
+                  tokens = [
+                    {
+                      type = URI_TOKEN_TYPE_STRING
+                      str_value = "index.html"
+                    }
+                  ]
+                }
+                query = {
+                  keep_query = true
+                }
+              }
+              switching_action = {
+                action = "HTTP_SWITCHING_SELECT_POOL"
+                status_code = "HTTP_LOCAL_RESPONSE_STATUS_CODE_200"
+                pool_ref = "/api/pool?name=pool1-vmw-hello"
+              }
+            },
+            {
+              name = "Rule 2"
+              match = {
+                path = {
+                  match_criteria = "CONTAINS"
+                  match_str = ["avi"]
+                }
+              }
+              rewrite_url_action = {
+                path = {
+                  type = "URI_PARAM_TYPE_TOKENIZED"
+                  tokens = [
+                    {
+                      type = URI_TOKEN_TYPE_STRING
+                      str_value = ""
+                    }
+                  ]
+                }
+                query = {
+                  keep_query = true
+                }
+              }
+              switching_action = {
+                action = "HTTP_SWITCHING_SELECT_POOL"
+                status_code = "HTTP_LOCAL_RESPONSE_STATUS_CODE_200"
+                pool_ref = "/api/pool?name=pool2-vmw-avi"
+              }
+            },
+          ]
+        }
+      }
+    ]
+    pools = [
+      {
+        name = "pool1-vmw-hello"
+        lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
+      },
+      {
+        name = "pool2-vmw-avi"
+        application_persistence_profile_ref = "System-Persistence-Client-IP"
+        default_server_port = 8080
+      }
+    ]
     virtualservices = {
       http = [
         {
-          name = "app1"
-          pool_ref = "pool1-vmw"
+          name = "app1-hello-world-vmw"
+          pool_ref = "pool1-vmw-hello"
           services: [
             {
               port = 80
@@ -372,8 +440,42 @@ variable "vmw" {
           ]
         },
         {
-          name = "app2-se-cpu-auto-scale"
-          pool_ref = "pool1-vmw"
+          name = "app2-avi-vmw"
+          pool_ref = "pool2-vmw-avi"
+          services: [
+            {
+              port = 80
+              enable_ssl = "false"
+            },
+            {
+              port = 443
+              enable_ssl = "true"
+            }
+          ]
+        },
+        {
+          name = "app3-content-switching-vmw"
+          pool_ref = "pool2-vmw-avi"
+          http_policies = [
+            {
+              http_policy_set_ref = "/api/httppolicyset?name=http-request-policy-app3-content-switching-vmw"
+              index = 11
+            }
+          ]
+          services: [
+            {
+              port = 80
+              enable_ssl = "false"
+            },
+            {
+              port = 443
+              enable_ssl = "true"
+            }
+          ]
+        },
+        {
+          name = "app4-se-cpu-auto-scale-vmw"
+          pool_ref = "pool1-vmw-hello"
           services: [
             {
               port = 80
@@ -386,20 +488,6 @@ variable "vmw" {
           ]
           se_group_ref: "seGroupCpuAutoScale"
         },
-        {
-          name = "opencart"
-          pool_ref = "pool-opencart-vmw"
-          services: [
-            {
-              port = 80
-              enable_ssl = "false"
-            },
-            {
-              port = 443
-              enable_ssl = "true"
-            }
-          ]
-        }
       ]
       dns = [
         {
