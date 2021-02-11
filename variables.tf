@@ -365,7 +365,7 @@ variable "vmw" {
                   type = "URI_PARAM_TYPE_TOKENIZED"
                   tokens = [
                     {
-                      type = URI_TOKEN_TYPE_STRING
+                      type = "URI_TOKEN_TYPE_STRING"
                       str_value = "index.html"
                     }
                   ]
@@ -393,7 +393,7 @@ variable "vmw" {
                   type = "URI_PARAM_TYPE_TOKENIZED"
                   tokens = [
                     {
-                      type = URI_TOKEN_TYPE_STRING
+                      type = "URI_TOKEN_TYPE_STRING"
                       str_value = ""
                     }
                   ]
