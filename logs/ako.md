@@ -43,7 +43,7 @@ AKOSettings:
   deleteConfig: "false" # Has to be set to true in configmap if user wants to delete AKO created objects from AVI
   disableStaticRouteSync: "false" # If the POD networks are reachable from the Avi SE, set this knob to true.
   clusterName: "cluster1" # A unique identifier for the kubernetes cluster, that helps distinguish the objects for this cluster in the avi controller. // MUST-EDIT
-  cniPlugin: "flannel" # Set the string if your CNI is calico or openshift. enum: calico|canal|flannel|openshift
+  cniPlugin: "calico" # Set the string if your CNI is calico or openshift. enum: calico|canal|flannel|openshift
   #NamespaceSelector contains label key and value used for namespacemigration
   #Same label has to be present on namespace/s which needs migration/sync to AKO
   namespaceSelector:
@@ -80,10 +80,10 @@ L4Settings:
 
 ### This section outlines settings on the Avi controller that affects AKO's functionality.
 ControllerSettings:
-  serviceEngineGroupName: "SeGroupAko1" # Name of the ServiceEngine Group.
+  serviceEngineGroupName: "seg-cluster-1" # Name of the ServiceEngine Group.
   controllerVersion: "20.1.3" # The controller API version
   cloudName: "cloudVmw" # The configured cloud name on the Avi controller.
-  controllerHost: "10.41.135.101" # IP address or Hostname of Avi Controller
+  controllerHost: "10.41.135.129" # IP address or Hostname of Avi Controller
   tenantsPerCluster: "false" # If set to true, AKO will map each kubernetes cluster uniquely to a tenant in Avi
   tenantName: "admin" # Name of the tenant where all the AKO objects will be created in AVI. // Required only if tenantsPerCluster is set to True
 

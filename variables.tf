@@ -72,13 +72,13 @@ variable "ansible" {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
     aviPbAbsentTag = "v1.48"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v4.16"
+    aviConfigureTag = "v4.17"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.21"
     directory = "ansible"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
-    k8sInstallTag = "v1.51"
+    k8sInstallTag = "v1.54"
   }
 }
 
@@ -176,90 +176,90 @@ variable "client" {
   }
 }
 
-variable "master" {
-  type = map
-  default = {
-    count = 1
-    cpu = 8
-    memory = 16384
-    disk = 80
-    network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
-    wait_for_guest_net_routable = "false"
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    username = "ubuntu"
-  }
-}
-
-variable "worker" {
-  type = map
-  default = {
-    count = 3
-    cpu = 4
-    memory = 8192
-    disk = 40
-    network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
-    wait_for_guest_net_routable = "false"
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    username = "ubuntu"
-  }
-}
-
-variable "kubernetes" {
-  default = {
-    domain = "ako.avidemo.fr"
-    ifApi = "ens224"
-    dockerUser = "ubuntu"
-    dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
-    podNetworkCidr = "192.168.0.0/16"
-    cniUrl = "https://docs.projectcalico.org/manifests/calico.yaml"
-//    # https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
-//    # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
-//    # Antrea: v0.9.1 # https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml
-    version = "1.18.2-00"
-    networkPrefix = "/24"
-    deployments = [
-      {
-        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
-      },
-      {
-        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
-      },
-      {
-        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV3.yml"
-      }
-    ]
-    nfs = [
-      {
-        name = "nfs-opencart"
-      },
-      {
-        name = "nfs-mariadb"
-      }
-    ]
-    services = [
-      {
-        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
-      },
-      {
-        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
-      },
-      {
-        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
-      },
-      {
-        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
-      },
-      {
-        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
-      },
-      {
-        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
-      }
-    ]
-  }
-}
+//variable "master" {
+//  type = map
+//  default = {
+//    count = 1
+//    cpu = 8
+//    memory = 16384
+//    disk = 80
+//    network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+//    wait_for_guest_net_routable = "false"
+//    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+//    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+//    username = "ubuntu"
+//  }
+//}
+//
+//variable "worker" {
+//  type = map
+//  default = {
+//    count = 3
+//    cpu = 4
+//    memory = 8192
+//    disk = 40
+//    network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+//    wait_for_guest_net_routable = "false"
+//    template_name = "ubuntu-bionic-18.04-cloudimg-template"
+//    netplanFile = "/etc/netplan/50-cloud-init.yaml"
+//    username = "ubuntu"
+//  }
+//}
+//
+//variable "kubernetes" {
+//  default = {
+//    domain = "ako.avidemo.fr"
+//    ifApi = "ens224"
+//    dockerUser = "ubuntu"
+//    dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
+//    podNetworkCidr = "192.168.0.0/16"
+//    cniUrl = "https://docs.projectcalico.org/manifests/calico.yaml"
+////    # https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
+////    # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
+////    # Antrea: v0.9.1 # https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml
+//    version = "1.18.2-00"
+//    networkPrefix = "/24"
+//    deployments = [
+//      {
+//        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
+//      },
+//      {
+//        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
+//      },
+//      {
+//        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV3.yml"
+//      }
+//    ]
+//    nfs = [
+//      {
+//        name = "nfs-opencart"
+//      },
+//      {
+//        name = "nfs-mariadb"
+//      }
+//    ]
+//    services = [
+//      {
+//        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
+//      },
+//      {
+//        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
+//      },
+//      {
+//        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
+//      },
+//      {
+//        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
+//      },
+//      {
+//        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV1.yml"
+//      },
+//      {
+//        url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
+//      }
+//    ]
+//  }
+//}
 
 variable "vmw" {
   default = {
@@ -491,7 +491,7 @@ variable "vmw" {
       ]
       dns = [
         {
-          name = "app3-dns"
+          name = "app5-dns"
           services: [
             {
               port = 53
@@ -499,7 +499,7 @@ variable "vmw" {
           ]
         },
         {
-          name = "app4-gslb"
+          name = "app6-gslb"
           services: [
             {
               port = 53
@@ -507,6 +507,164 @@ variable "vmw" {
           ]
           se_group_ref: "seGroupGslb"
         }
+      ]
+    }
+    kubernetes = {
+      ako = {
+        helm = {
+          url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+        }
+      }
+      workers = {
+        count = 3
+      }
+      clusters = [
+        {
+          name = "cluster1" # cluster name
+          netplanApply = true
+          username = "ubuntu" # default username dor docker and to connect
+          ako = {
+            namespace = "avi-system"
+          }
+          version = "1.18.2-00" # k8s version
+          arePodsReachable = "false" # defines in values.yml if dynamic route to reach the pods
+          serviceEngineGroup = {
+            name = "seg-cluster1"
+            ha_mode = "HA_MODE_SHARED"
+            min_scaleout_per_vs = "2"
+            vcenter_folder = "NicTfVmw"
+          }
+          networks = {
+            pod = "192.168.0.0/16"
+          }
+          docker = {
+            version = "5:19.03.8~3-0~ubuntu-bionic"
+          }
+          service = {
+            type = "ClusterIP"
+          }
+          interface = "ens224" # interface used by k8s
+          cni = {
+            url = "https://docs.projectcalico.org/manifests/calico.yaml"
+            name = "calico" # calico
+          }
+          master = {
+            cpu = 8
+            memory = 16384
+            disk = 80
+            network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+            wait_for_guest_net_routable = "false"
+            template_name = "ubuntu-bionic-18.04-cloudimg-template"
+            netplanFile = "/etc/netplan/50-cloud-init.yaml"
+          }
+          worker = {
+            cpu = 4
+            memory = 8192
+            disk = 40
+            network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+            wait_for_guest_net_routable = "false"
+            template_name = "ubuntu-bionic-18.04-cloudimg-template"
+            netplanFile = "/etc/netplan/50-cloud-init.yaml"
+          }
+        },
+        {
+          name = "cluster2"
+          netplanApply = true
+          username = "ubuntu"
+          ako = {
+            namespace = "avi-system"
+          }
+          version = "1.18.2-00"
+          arePodsReachable = "false"
+          serviceEngineGroup = {
+            name = "seg-cluster2"
+            ha_mode = "HA_MODE_SHARED"
+            min_scaleout_per_vs = "2"
+            vcenter_folder = "NicTfVmw"
+          }
+          networks = {
+            pod = "192.168.1.0/16"
+          }
+          docker = {
+            version = "5:19.03.8~3-0~ubuntu-bionic"
+          }
+          service = {
+            type = "ClusterIP"
+          }
+          interface = "ens224"
+          cni = {
+            url = "https://docs.projectcalico.org/manifests/calico.yaml"
+            name = "calico" # calico
+          }
+          master = {
+            count = 1
+            cpu = 8
+            memory = 16384
+            disk = 80
+            network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+            wait_for_guest_net_routable = "false"
+            template_name = "ubuntu-bionic-18.04-cloudimg-template"
+            netplanFile = "/etc/netplan/50-cloud-init.yaml"
+          }
+          worker = {
+            cpu = 4
+            memory = 8192
+            disk = 40
+            network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+            wait_for_guest_net_routable = "false"
+            template_name = "ubuntu-bionic-18.04-cloudimg-template"
+            netplanFile = "/etc/netplan/50-cloud-init.yaml"
+          }
+        },
+        {
+          name = "cluster3"
+          netplanApply = true
+          username = "ubuntu"
+          ako = {
+            namespace = "avi-system"
+          }
+          version = "1.18.2-00"
+          arePodsReachable = "false"
+          serviceEngineGroup = {
+            name = "seg-cluster3"
+            ha_mode = "HA_MODE_SHARED"
+            min_scaleout_per_vs = "2"
+            vcenter_folder = "NicTfVmw"
+          }
+          networks = {
+            pod = "192.168.2.0/16"
+          }
+          docker = {
+            version = "5:19.03.8~3-0~ubuntu-bionic"
+          }
+          service = {
+            type = "ClusterIP"
+          }
+          interface = "ens224"
+          cni = {
+            url = "https://docs.projectcalico.org/manifests/calico.yaml"
+            name = "calico" # calico
+          }
+          master = {
+            count = 1
+            cpu = 8
+            memory = 16384
+            disk = 80
+            network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+            wait_for_guest_net_routable = "false"
+            template_name = "ubuntu-bionic-18.04-cloudimg-template"
+            netplanFile = "/etc/netplan/50-cloud-init.yaml"
+          }
+          worker = {
+            cpu = 4
+            memory = 8192
+            disk = 40
+            network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+            wait_for_guest_net_routable = "false"
+            template_name = "ubuntu-bionic-18.04-cloudimg-template"
+            netplanFile = "/etc/netplan/50-cloud-init.yaml"
+          }
+        },
       ]
     }
   }
@@ -553,14 +711,14 @@ variable "lsc" {
       private_key_path = "~/.ssh/cloudKey"
     }
     pool = {
-        name = "pool9-lsc"
+        name = "pool7-lsc"
         lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
     }
     virtualservices = {
       http = [
         {
-          name = "app9-lsc"
-          pool_ref = "pool9-lsc"
+          name = "app7-lsc"
+          pool_ref = "pool7-lsc"
           services: [
             {
               port = 80

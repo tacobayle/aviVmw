@@ -43,10 +43,10 @@ write_files:
       ping www.google.com -c 1
       ping foo -c 1
       while [ $? -ne 0 ] ; do docker login --username ${docker_registry_username} --password ${docker_registry_password} ; sleep 5 ; done
-      docker pull calico/pod2daemon-flexvol:v3.17.2
-      docker pull calico/node:v3.17.2
-      docker pull calico/cni:v3.17.2
-      docker pull calico/kube-controllers:v3.17.2
+      wget ${cniUrl} -O cni.yml
+      for image in $(cat cni.yml | grep 'docker.io' | awk -F 'docker.io/' '{print $2}'); do docker pull $image ; done
+      #cni=${cni}
+      #[ $cni == 'calico' ] && ( echo "CNI is Calico" ; docker pull calico/pod2daemon-flexvol:v3.17.2  ; docker pull calico/node:v3.17.2 ; docker pull calico/cni:v3.17.2 ; docker pull calico/kube-controllers:v3.17.2)
       echo "cloud init done" | tee /tmp/cloudInitDone.log
     path: /opt/bootstrap.sh
     permissions: 0755
