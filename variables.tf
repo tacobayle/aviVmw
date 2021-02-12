@@ -545,7 +545,7 @@ variable "vmw" {
           interface = "ens224" # interface used by k8s
           cni = {
             url = "https://docs.projectcalico.org/manifests/calico.yaml"
-            name = "calico" # calico
+            name = "calico" # calico or antrea
           }
           master = {
             cpu = 8
@@ -592,8 +592,8 @@ variable "vmw" {
           }
           interface = "ens224"
           cni = {
-            url = "https://docs.projectcalico.org/manifests/calico.yaml"
-            name = "calico" # calico
+            url = "https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml"
+            name = "antrea"
           }
           master = {
             count = 1
