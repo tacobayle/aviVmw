@@ -12,7 +12,7 @@ data "template_file" "values" {
     serviceEngineGroupName = var.vmw.kubernetes.clusters[count.index].serviceEngineGroup.name
     controllerVersion = split("-", var.controller.version)[0]
     cloudName = var.vmw.name
-    controllerHost = "1.1.1.1"
+    controllerHost = vsphere_virtual_machine.controller[0].default_ip_address
   }
 }
 
