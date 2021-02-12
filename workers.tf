@@ -21,7 +21,7 @@ data "vsphere_virtual_machine" "worker" {
 
 resource "vsphere_virtual_machine" "worker" {
   count = length(var.vmw.kubernetes.clusters) * var.vmw.kubernetes.workers.count
-  name             = "${var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].name}-worker-${count.index}"
+  name             = "${var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].name}-worker-${var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].name}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   folder           = vsphere_folder.folder.path
@@ -60,7 +60,7 @@ resource "vsphere_virtual_machine" "worker" {
 
   vapp {
     properties = {
-      hostname    = "${var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].name}-worker-${count.index}"
+      hostname    = "${var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].name}-worker-${var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].name}"
       public-keys = file(var.jump.public_key_path)
       user-data   = base64encode(data.template_file.worker_userdata[count.index].rendered)
     }
