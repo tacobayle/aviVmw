@@ -23,12 +23,14 @@ data "vsphere_network" "networkMgt" {
 }
 
 data "vsphere_network" "networkMaster" {
-  name = var.master.network
+  count = length(var.vmw.kubernetes.clusters)
+  name = var.vmw.kubernetes.clusters[count.index].master.network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 data "vsphere_network" "networkWorker" {
-  name = var.worker.network
+  count = length(var.vmw.kubernetes.clusters) * var.vmw.kubernetes.workers.count
+  name = var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].worker.network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
@@ -146,18 +148,18 @@ resource "vsphere_tag_category" "ansible_group_se" {
   ]
 }
 
-resource "vsphere_tag_category" "ansible_group_master" {
-  name = "ansible_group_master"
-  cardinality = "SINGLE"
-  associable_types = [
-    "VirtualMachine",
-  ]
-}
-
-resource "vsphere_tag_category" "ansible_group_worker" {
-  name = "ansible_group_worker"
-  cardinality = "SINGLE"
-  associable_types = [
-    "VirtualMachine",
-  ]
-}
+//resource "vsphere_tag_category" "ansible_group_master" {
+//  name = "ansible_group_master"
+//  cardinality = "SINGLE"
+//  associable_types = [
+//    "VirtualMachine",
+//  ]
+//}
+//
+//resource "vsphere_tag_category" "ansible_group_worker" {
+//  name = "ansible_group_worker"
+//  cardinality = "SINGLE"
+//  associable_types = [
+//    "VirtualMachine",
+//  ]
+//}
