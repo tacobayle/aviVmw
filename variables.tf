@@ -70,9 +70,9 @@ variable "ansible" {
   type = map
   default = {
     aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
-    aviPbAbsentTag = "v1.48"
+    aviPbAbsentTag = "v1.49"
     aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v4.2"
+    aviConfigureTag = "v4.25"
     version = "2.9.12"
     opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
     opencartInstallTag = "v1.21"
@@ -509,11 +509,6 @@ variable "vmw" {
       ]
     }
     kubernetes = {
-      ako = {
-        helm = {
-          url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
-        }
-      }
       workers = {
         count = 3
       }
@@ -522,10 +517,27 @@ variable "vmw" {
           name = "cluster1" # cluster name
           netplanApply = true
           username = "ubuntu" # default username dor docker and to connect
-          ako = {
-            namespace = "avi-system"
-          }
           version = "1.18.2-00" # k8s version
+          namespaces = [
+            {
+              name= "avi-system"
+            },
+            {
+              name= "ns1"
+            },
+            {
+              name= "ns2"
+            },
+            {
+              name= "ns3"
+            },
+          ]
+          ako = {
+            version = "1.3.1"
+            helm = {
+              url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+            }
+          }
           arePodsReachable = "false" # defines in values.yml if dynamic route to reach the pods
           serviceEngineGroup = {
             name = "seg-cluster1"
@@ -570,10 +582,27 @@ variable "vmw" {
           name = "cluster2"
           netplanApply = true
           username = "ubuntu"
-          ako = {
-            namespace = "avi-system"
-          }
           version = "1.18.2-00"
+          namespaces = [
+            {
+              name= "avi-system"
+            },
+            {
+              name= "ns1"
+            },
+            {
+              name= "ns2"
+            },
+            {
+              name= "ns3"
+            },
+          ]
+          ako = {
+            version = "1.3.1"
+            helm = {
+              url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+            }
+          }
           arePodsReachable = "false"
           serviceEngineGroup = {
             name = "seg-cluster2"
@@ -619,10 +648,27 @@ variable "vmw" {
           name = "cluster3"
           netplanApply = true
           username = "ubuntu"
-          ako = {
-            namespace = "avi-system"
-          }
           version = "1.18.2-00"
+          namespaces = [
+            {
+              name= "avi-system"
+            },
+            {
+              name= "ns1"
+            },
+            {
+              name= "ns2"
+            },
+            {
+              name= "ns3"
+            },
+          ]
+          ako = {
+            version = "1.3.1"
+            helm = {
+              url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+            }
+          }
           arePodsReachable = "false"
           serviceEngineGroup = {
             name = "seg-cluster3"
@@ -641,8 +687,8 @@ variable "vmw" {
           }
           interface = "ens224"
           cni = {
-            url = "https://docs.projectcalico.org/manifests/calico.yaml"
-            name = "calico" # calico
+            url = "https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml"
+            name = "flannel"
           }
           master = {
             count = 1

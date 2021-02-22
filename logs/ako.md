@@ -1,6 +1,11 @@
 https://medium.com/@kanrangsan/how-to-specify-internal-ip-for-kubernetes-worker-node-24790b2884fd
 https://networkinferno.net/trouble-with-the-kubernetes-node-ip
 
+list of the URL(s) for CNI(s):
+- Flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
+- Antrea: https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml
+- Calico: https://docs.projectcalico.org/manifests/calico.yaml
+
 
 
 ```
@@ -19,7 +24,10 @@ helm repo add ako https://avinetworks.github.io/avi-helm-charts/charts/stable/ak
 kubectl apply -f namespace_avi-system.yml
 kubectl create secret docker-registry docker --docker-server=docker.io --docker-username=tacobayle --docker-password=***** --docker-email=nicolas.bayle@gmail.com -n avi-system
 kubectl patch serviceaccount default -p "{\"imagePullSecrets\": [{\"name\": \"docker\"}]}" -n avi-system
+kubectl patch serviceaccount default -p "{\"imagePullSecrets\": [{\"name\": \"docker\"}]}"
 helm --debug install ako/ako --generate-name --version 1.3.1 -f values.yml --namespace=avi-system
+
+helm --debug install ako/ako --generate-name --version 1.3.1 -f values.yml --namespace=avi-system --set avicredentials.username=admin --set avicredentials.password=***
 kubectl patch serviceaccount ako-sa -p "{\"imagePullSecrets\": [{\"name\": \"docker\"}]}" -n avi-system
 kubectl delete pod ako-0 -n avi-system
 ```
