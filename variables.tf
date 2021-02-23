@@ -677,7 +677,7 @@ variable "vmw" {
             vcenter_folder = "NicTfVmw"
           }
           networks = {
-            pod = "192.168.2.0/16"
+            pod = "10.244.0.0/16"
           }
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
