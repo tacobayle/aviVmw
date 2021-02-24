@@ -314,6 +314,9 @@ variable "vmw" {
         name = "seGroupCpuAutoScale"
         ha_mode = "HA_MODE_SHARED"
         min_scaleout_per_vs = 1
+        max_scaleout_per_vs = 2
+        max_cpu_usage = 70
+        #vs_scaleout_timeout = 30
         buffer_se = 2
         extra_shared_config_memory = 0
         vcenter_folder = "NicTfVmw"
