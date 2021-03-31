@@ -134,6 +134,7 @@ logFile: "avi.log"
 kubectl delete namespace avi-system
 kubectl delete ClusterRoleBinding ako-crb
 kubectl delete ClusterRole ako-cr
+kubectl delete ingressClass avi-lb # from 1.3.4 onwards
 kubectl apply -f namespace_avi-system.yml
 ```
 

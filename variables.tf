@@ -428,7 +428,7 @@ variable "vmw" {
     virtualservices = {
       http = [
         {
-          name = "app1-hello-world-vmw"
+          name = "app1-hello-world"
           pool_ref = "pool1-vmw-hello"
           services: [
             {
@@ -442,7 +442,7 @@ variable "vmw" {
           ]
         },
         {
-          name = "app2-avi-vmw"
+          name = "app2"
           pool_ref = "pool2-vmw-avi"
           services: [
             {
@@ -456,7 +456,7 @@ variable "vmw" {
           ]
         },
         {
-          name = "app3-content-switching-vmw"
+          name = "app3-content-switching"
           pool_ref = "pool2-vmw-avi"
           http_policies = [
             {
@@ -476,7 +476,7 @@ variable "vmw" {
           ]
         },
         {
-          name = "app4-se-cpu-auto-scale-vmw"
+          name = "app4-se-cpu-auto-scale"
           pool_ref = "pool1-vmw-hello"
           services: [
             {
@@ -765,7 +765,7 @@ variable "lsc" {
     virtualservices = {
       http = [
         {
-          name = "app7-lsc"
+          name = "app7"
           pool_ref = "pool7-lsc"
           services: [
             {
