@@ -38,7 +38,7 @@ resource "null_resource" "ako" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo \"avi_password=${avi_password}\" | sudo tee -a /home/ubuntu/.profile",
+      "echo \"avi_password=${var.avi_password}\" | sudo tee -a /home/ubuntu/.profile",
       "helm repo add ako ${var.vmw.kubernetes.clusters[count.index].ako.helm.url}",
       "kubectl create secret docker-registry docker --docker-server=docker.io --docker-username=${var.docker_registry_username} --docker-password=${var.docker_registry_password} --docker-email=${var.docker_registry_email}",
       "kubectl patch serviceaccount default -p \"{\\\"imagePullSecrets\\\": [{\\\"name\\\": \\\"docker\\\"}]}\"",
