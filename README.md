@@ -62,3 +62,6 @@ Avi 20.1.3 with one controller node
 cd ~ ; git clone https://github.com/tacobayle/aviVmw ; cd aviVmw ; terraform init ; terraform apply -auto-approve
 # the terraform will output the command to destroy the environment.
 ```
+
+## compatibility matrix
+- Avi version v20.1.3 works with tag v3.18

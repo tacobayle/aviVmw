@@ -34,7 +34,7 @@ variable "controller" {
     memory = 32768
     disk = 256
     count = "1"
-    version = "20.1.4-9087"
+    version = "20.1.6-9132"
     floatingIp = "10.41.134.130"
     wait_for_guest_net_timeout = 4
     private_key_path = "~/.ssh/cloudKey"
@@ -536,9 +536,9 @@ variable "vmw" {
             },
           ]
           ako = {
-            version = "1.3.1"
+            version = "1.4.2"
             helm = {
-              url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+              url = "https://projects.registry.vmware.com/chartrepo/ako"
             }
           }
           arePodsReachable = "false" # defines in values.yml if dynamic route to reach the pods
@@ -601,9 +601,9 @@ variable "vmw" {
             },
           ]
           ako = {
-            version = "1.3.1"
+            version = "1.4.2"
             helm = {
-              url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+              url = "https://projects.registry.vmware.com/chartrepo/ako"
             }
           }
           arePodsReachable = "false"
@@ -667,9 +667,9 @@ variable "vmw" {
             },
           ]
           ako = {
-            version = "1.3.1"
+            version = "1.4.2"
             helm = {
-              url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+              url = "https://projects.registry.vmware.com/chartrepo/ako"
             }
           }
           arePodsReachable = "false"
