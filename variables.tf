@@ -34,6 +34,8 @@ variable "controller" {
     memory = 32768
     disk = 256
     count = "1"
+    cluster = false
+    floating_ip = false
     version = "20.1.6-9132"
     floatingIp = "10.41.134.130"
     wait_for_guest_net_timeout = 4
